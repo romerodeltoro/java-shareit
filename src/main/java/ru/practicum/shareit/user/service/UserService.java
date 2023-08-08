@@ -11,5 +11,6 @@ public interface UserService {
     UserDto getUser(long userId);
     void deleteUser(long userId);
     List<UserDto> getAllUsers();
+    void userExistCheck(long userId);
 
 }

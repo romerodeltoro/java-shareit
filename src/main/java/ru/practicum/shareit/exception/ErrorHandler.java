@@ -56,4 +56,12 @@ public class ErrorHandler {
                 .body(new ResponseError(e.getMessage()));
     }
 
+    /*@ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ResponseError> validationException(ValidationException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseError(e.getMessage()));
+    }*/
+
 }

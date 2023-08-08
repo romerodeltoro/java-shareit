@@ -11,6 +11,8 @@ import ru.practicum.shareit.item.dao.ItemStorage;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.service.impl.UserServiceImpl;
 
 import java.util.Collections;
@@ -27,16 +29,19 @@ public class ItemServiceImpl implements ItemService {
     private ItemStorage itemStorage;
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Autowired
     private ItemMapper itemMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public ItemDto createItem(long userId, ItemDto itemDto) {
         userService.userExistCheck(userId);
         Item item = itemMapper.toItem(itemDto);
-        item.setOwner(userService.getUserStorage().getUser(userId));
+        item.setOwner(userMapper.toUser(userService.getUser(userId)));
         itemStorage.addItem(item);
         log.info("Создана новая вещь - '{}'", item);
         return itemMapper.toItemDto(item);
@@ -94,11 +99,6 @@ public class ItemServiceImpl implements ItemService {
     }
 
     private void itemExistCheck(long itemId) {
-        /*if(itemStorage.getItem(itemId) == null) {
-            throw new ItemNotFoundException(String.format("Вещи с id %d нет в базе", itemId)
-            );
-        }*/
-
         Optional.ofNullable(itemStorage.getItem(itemId))
                 .orElseThrow(() -> new ItemNotFoundException(String.format("Вещи с id %d нет в базе", itemId)));
     }
