@@ -1,43 +1,30 @@
 package ru.practicum.shareit.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.exception.UserEmailAlreadyExistException;
 import ru.practicum.shareit.user.UserController;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import javax.validation.Validation;
 import javax.validation.ValidationException;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest {
 
 
     private final UserController userController;
 
-    private static final Validator validator;
-
-    static {
-        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        validator = validatorFactory.usingContext().getValidator();
-    }
-
     private final UserDto userDto = UserDto.builder().name("User").email("user@user.com").build();
 
-    @AfterEach
-    void tearDown() {
-
-    }
 
     @Test
     @DisplayName("Создание пользователя")
@@ -134,8 +121,7 @@ public class UserControllerTest {
                 UserEmailAlreadyExistException.class,
                 () -> userController.updateUser(id, userWithExistEmail)
         );
-        assertEquals("Пользователь с email newUser@user.com уже существует",
-                e.getMessage().replace("createUser.userDto.email: ", ""));
+        assertEquals("Пользователь с email newUser@user.com уже существует", e.getMessage());
     }
 
     @Test

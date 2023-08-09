@@ -13,7 +13,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
-import ru.practicum.shareit.user.service.impl.UserServiceImpl;
 
 import java.util.Collections;
 import java.util.List;
