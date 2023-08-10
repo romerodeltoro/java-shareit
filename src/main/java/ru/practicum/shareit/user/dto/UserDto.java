@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class UserDto {
 
-    private long id;
+    private Long id;
 
     @NotBlank(message = "Поле name не может быть пустым")
     private String name;

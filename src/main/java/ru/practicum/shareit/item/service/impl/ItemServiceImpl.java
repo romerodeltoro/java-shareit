@@ -38,6 +38,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto createItem(long userId, ItemDto itemDto) {
+        if (itemDto.getId() == null) {
+            itemDto.setId(0L);
+        }
         userService.userExistCheck(userId);
         Item item = itemMapper.toItem(itemDto);
         item.setOwner(userMapper.toUser(userService.getUser(userId)));

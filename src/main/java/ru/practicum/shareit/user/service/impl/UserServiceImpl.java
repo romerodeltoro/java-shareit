@@ -30,6 +30,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(UserDto userDto) {
+        if (userDto.getId() == null) {
+            userDto.setId(0L);
+        }
         userEmailExistCheck(userDto.getId(), userDto);
         User user = userMapper.toUser(userDto);
         userStorage.addUser(user);
