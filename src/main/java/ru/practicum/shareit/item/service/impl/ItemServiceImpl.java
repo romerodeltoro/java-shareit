@@ -35,7 +35,7 @@ public class ItemServiceImpl implements ItemService {
     private ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
     @Autowired
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);;
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     @Override
     public ItemDto createItem(long userId, ItemDto itemDto) {
