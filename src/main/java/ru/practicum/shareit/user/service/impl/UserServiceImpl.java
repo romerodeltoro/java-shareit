@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.UserEmailAlreadyExistException;
 import ru.practicum.shareit.exception.UserNotFoundException;
-import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.dao.UserStorage;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -36,8 +36,9 @@ public class UserServiceImpl implements UserService {
         userEmailExistCheck(userDto.getId(), userDto);
         User user = userMapper.toUser(userDto);
         userStorage.addUser(user);
-        log.info("Создан новый пользователь: id - '{}', name - '{}'", user.getId(), user.getName());
-        return userMapper.toUserDto(user);
+        userDto = userMapper.toUserDto(user);
+        log.info("Создан новый пользователь: '{}'", user);
+        return userDto;
     }
 
     @Override

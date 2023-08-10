@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.ItemOwnerException;
-import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.dao.ItemStorage;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.user.UserMapper;
+import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.Collections;
@@ -45,8 +45,9 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemMapper.toItem(itemDto);
         item.setOwner(userMapper.toUser(userService.getUser(userId)));
         itemStorage.addItem(item);
-        log.info("Создана новая вещь - '{}'", item);
-        return itemMapper.toItemDto(item);
+        itemDto = itemMapper.toItemDto(item);
+        log.info("Создана новая вещь - '{}'", itemDto);
+        return itemDto;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
                 itemDto.getAvailable() != null ? itemDto.getAvailable() : updateItem.getAvailable()
         );
         itemDto = itemMapper.toItemDto(updateItem);
-        log.info("Вещь '{}' - обновлена", updateItem);
+        log.info("Вещь '{}' - обновлена", itemDto);
 
         return itemDto;
     }

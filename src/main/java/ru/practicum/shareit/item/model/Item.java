@@ -15,5 +15,14 @@ public class Item {
     private Boolean available;
     private User owner;
 
-
+    @Override
+    public String toString() {
+        return "Item{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", available=" + available +
+                ", owner=" + owner +
+                '}';
+    }
 }
