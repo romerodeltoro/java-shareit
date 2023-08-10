@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service.impl;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.UserEmailAlreadyExistException;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
     private UserStorage userStorage;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(userDto);
         userStorage.addUser(user);
         userDto = userMapper.toUserDto(user);
-        log.info("Создан новый пользователь: '{}'", user);
+        log.info("Создан новый пользователь: '{}'", userDto);
         return userDto;
     }
 

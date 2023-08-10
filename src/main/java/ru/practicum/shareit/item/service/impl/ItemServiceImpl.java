@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.ItemNotFoundException;
@@ -31,10 +32,10 @@ public class ItemServiceImpl implements ItemService {
     private UserService userService;
 
     @Autowired
-    private ItemMapper itemMapper;
+    private ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
     @Autowired
-    private UserMapper userMapper;
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);;
 
     @Override
     public ItemDto createItem(long userId, ItemDto itemDto) {
