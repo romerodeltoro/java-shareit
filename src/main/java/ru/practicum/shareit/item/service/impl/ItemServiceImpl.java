@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceImpl implements ItemService{
 
     @Autowired
     private ItemStorage itemStorage;
@@ -37,12 +37,12 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
-    @Override
+
     public ItemDto createItem(long userId, ItemDto itemDto) {
         if (itemDto.getId() == null) {
             itemDto.setId(0L);
         }
-        userService.userExistCheck(userId);
+        //userService.userExistCheck(userId);
         Item item = itemMapper.toItem(itemDto);
         item.setOwner(userMapper.toUser(userService.getUser(userId)));
         itemStorage.addItem(item);
@@ -51,9 +51,9 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-    @Override
+
     public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
-        userService.userExistCheck(userId);
+       // userService.userExistCheck(userId);
         itemExistCheck(itemId);
         itemOwnerCheck(userId, itemId);
         Item updateItem = itemStorage.getItem(itemId);
@@ -70,16 +70,16 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-    @Override
+
     public ItemDto getItem(long itemId) {
         itemExistCheck(itemId);
         log.info("Получена вещь с id '{}'", itemId);
         return itemMapper.toItemDto(itemStorage.getItem(itemId));
     }
 
-    @Override
+
     public List<ItemDto> getAllUserItems(long userId) {
-        userService.userExistCheck(userId);
+        //userService.userExistCheck(userId);
         log.info("Получен список вещей пользователя с id '{}'", userId);
         return itemStorage.getAllItems().stream()
                 .filter(i -> i.getOwner().getId() == userId)
@@ -87,7 +87,7 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
-    @Override
+
     public List<ItemDto> searchItems(String text) {
         if (text.isEmpty()) {
             log.info("Не было найдено ни одного предмета по запросу '{}'", text);

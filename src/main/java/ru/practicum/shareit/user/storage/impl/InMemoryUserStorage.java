@@ -1,7 +1,7 @@
-package ru.practicum.shareit.user.dao.impl;
+package ru.practicum.shareit.user.storage.impl;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.user.dao.UserStorage;
+import ru.practicum.shareit.user.storage.UserStorage;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;

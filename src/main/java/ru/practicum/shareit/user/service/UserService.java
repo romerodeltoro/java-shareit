@@ -16,6 +16,6 @@ public interface UserService {
 
     List<UserDto> getAllUsers();
 
-    void userExistCheck(long userId);
+    //void userExistCheck(long userId);
 
 }
