@@ -13,7 +13,6 @@ import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.storage.UserRepository;
-import ru.practicum.shareit.user.storage.UserStorage;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,10 +40,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto updateUser(long userId, UserDto userDto) {
-        User user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format(
-                "Пользователя с id %d нет в базе", userId)));
-        user.setName(userDto.getName() != null ? userDto.getName() : user.getName());
+        User user = ifUserExistReturnUser(userId);
         isEmailExist(userId, userDto.getEmail());
+        user.setName(userDto.getName() != null ? userDto.getName() : user.getName());
         user.setEmail(userDto.getEmail() != null ? userDto.getEmail() : user.getEmail());
         repository.saveAndFlush(user);
         log.info("Пользователь '{}' - обновлен", user);
@@ -54,8 +52,7 @@ public class UserServiceImpl implements UserService {
     //@Transactional(readOnly = true)
     @Override
     public UserDto getUser(long userId) {
-        User user = repository.findById(userId).orElseThrow(() -> new UserNotFoundException(String.format(
-                "Пользователя с id %d нет в базе", userId)));
+        User user = ifUserExistReturnUser(userId);
         log.info("Получен пользователь '{}'", user);
         return userMapper.toUserDto(user);
     }
@@ -72,6 +69,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAllUsers() {
         return userMapper.toUserDtoList(repository.findAll());
+    }
+
+    public User ifUserExistReturnUser(long userId) {
+        return repository.findById(userId).orElseThrow(() -> new UserNotFoundException(
+                String.format("Пользователя с id %d нет в базе", userId)));
     }
 
 

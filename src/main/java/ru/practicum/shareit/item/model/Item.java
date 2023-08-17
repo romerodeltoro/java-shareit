@@ -1,17 +1,16 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
 
-@Getter @Setter
+@Getter @Setter @ToString
 @Builder
 @Entity
 @Table(name = "items", schema = "public")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
     @Id
     @Column(name = "id")
@@ -21,7 +20,7 @@ public class Item {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description", length = 255, nullable = false)
+    @Column(name = "description", nullable = false)
     private String description;
 
     @Column(name = "available", nullable = false)
@@ -29,7 +28,7 @@ public class Item {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
-    private User owner;
+    private User user;
 
 
 }

@@ -2,8 +2,11 @@ package ru.practicum.shareit.user.model;
 
 
 import lombok.*;
+import ru.practicum.shareit.item.model.Item;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Getter @Setter @ToString
@@ -24,6 +27,10 @@ public class User {
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    /*@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private Set<Item> items = new HashSet<>();*/
 
     /*@Enumerated(EnumType.STRING)
     private UserState state;

@@ -25,7 +25,5 @@ public class ItemDto {
     @NotNull(message = "Поле available не может быть пустым")
     private Boolean available;
 
-    private String registrationDate;
-
 
 }
