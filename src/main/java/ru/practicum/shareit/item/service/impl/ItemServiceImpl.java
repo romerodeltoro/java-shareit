@@ -32,21 +32,21 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private final UserService userService;
 
-    @Autowired
+    /*@Autowired
     private ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
     @Autowired
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);*/
 
     @Transactional
     @Override
     public ItemDto createItem(long userId, ItemDto itemDto) {
         User user = userService.ifUserExistReturnUser(userId);
-        Item item = itemRepository.save(itemMapper.toItem(itemDto));
+        Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto));
         item.setUser(user);
         log.info("Создана новая вещь - '{}'", item);
 
-        return itemMapper.toItemDto(item);
+        return ItemMapper.INSTANCE.toItemDto(item);
     }
 
     @Transactional
@@ -60,7 +60,7 @@ public class ItemServiceImpl implements ItemService {
         item.setAvailable(itemDto.getAvailable() != null ? itemDto.getAvailable() : item.getAvailable());
         log.info("Вещь '{}' - обновлена", item);
 
-        return itemMapper.toItemDto(item);
+        return ItemMapper.INSTANCE.toItemDto(item);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = ifItemExistReturnItem(itemId);
         log.info("Получена вещь с id '{}'", itemId);
 
-        return itemMapper.toItemDto(item);
+        return ItemMapper.INSTANCE.toItemDto(item);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class ItemServiceImpl implements ItemService {
         userService.ifUserExistReturnUser(userId);
         log.info("Получен список вещей пользователя с id '{}'", userId);
 
-        return itemMapper.toItemDtoList(itemRepository.findByUserId(userId));
+        return ItemMapper.INSTANCE.toItemDtoList(itemRepository.findByUserId(userId));
     }
 
     @Override
@@ -87,10 +87,11 @@ public class ItemServiceImpl implements ItemService {
         }
         List<Item> items = itemRepository.findByUserAndNameOrDescription(userId, searchText);
 
-        return itemMapper.toItemDtoList(items);
+        return ItemMapper.INSTANCE.toItemDtoList(items);
     }
 
-    private Item ifItemExistReturnItem(long itemId) {
+    @Override
+    public Item ifItemExistReturnItem(long itemId) {
         return itemRepository.findById(itemId).orElseThrow(() -> new ItemNotFoundException(
                 String.format("Вещи с id %d нет в базе", itemId)));
     }

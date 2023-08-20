@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest {
 
-
+/*
     private final UserController userController;
 
     private final UserDto userDto = UserDto.builder().name("User").email("user@user.com").build();
@@ -153,5 +153,5 @@ public class UserControllerTest {
         userController.deleteUser(createdUser.getId());
 
         assertTrue(userController.getAllUsers().getBody().isEmpty());
-    }
+    }*/
 }

@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +25,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository repository;
 
-    @Autowired
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+   /* @Autowired
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);*/
 
     @Transactional
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = repository.save(userMapper.toUser(userDto));
+        User user = repository.save(UserMapper.INSTANCE.toUser(userDto));
         log.info("Создан новый пользователь: '{}'", user);
-        return userMapper.toUserDto(user);
+        return UserMapper.INSTANCE.toUserDto(user);
     }
 
     @Transactional
@@ -46,7 +45,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userDto.getEmail() != null ? userDto.getEmail() : user.getEmail());
         repository.saveAndFlush(user);
         log.info("Пользователь '{}' - обновлен", user);
-        return userMapper.toUserDto(user);
+        return UserMapper.INSTANCE.toUserDto(user);
     }
 
     //@Transactional(readOnly = true)
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService {
     public UserDto getUser(long userId) {
         User user = ifUserExistReturnUser(userId);
         log.info("Получен пользователь '{}'", user);
-        return userMapper.toUserDto(user);
+        return UserMapper.INSTANCE.toUserDto(user);
     }
 
 
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService {
     //@Transactional(readOnly = true)
     @Override
     public List<UserDto> getAllUsers() {
-        return userMapper.toUserDtoList(repository.findAll());
+        return UserMapper.INSTANCE.toUserDtoList(repository.findAll());
     }
 
     public User ifUserExistReturnUser(long userId) {

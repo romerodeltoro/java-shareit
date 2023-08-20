@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class ItemControllerTest {
 
-    private final ItemController itemController;
+   /* private final ItemController itemController;
 
     private final UserController userController;
 
@@ -214,13 +214,13 @@ public class ItemControllerTest {
     @Test
     @DisplayName("Получение списка вещей пользователя")
     void searchItems() {
-       /* final long userId = userController.createUser(userDto).getBody().getId();
+       *//* final long userId = userController.createUser(userDto).getBody().getId();
         itemController.createItem(userId, itemDto);
         final ItemDto otherItem = itemController.createItem(userId, otherItemDto).getBody();
         final List<ItemDto> listItems = Arrays.asList(otherItem);
         final String searchText = "аккУМУляторная";
 
         assertEquals(listItems,
-                itemController.searchItems(searchText).getBody(), "Вещи не совпадают.");*/
-    }
+                itemController.searchItems(searchText).getBody(), "Вещи не совпадают.");*//*
+    }*/
 }

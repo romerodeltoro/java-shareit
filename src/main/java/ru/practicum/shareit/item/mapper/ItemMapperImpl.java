@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.mapper;
 
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -41,11 +42,17 @@ public class ItemMapperImpl implements ItemMapper {
     @Override
     public List<ItemDto> toItemDtoList(Iterable<Item> items) {
         List<ItemDto> result = new ArrayList<>();
-
         for (Item item : items) {
             result.add(toItemDto(item));
         }
-
         return result;
+    }
+
+    @Override
+    public ItemBookingDto toItemBookingDto(Item item) {
+        return ItemBookingDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .build();
     }
 }

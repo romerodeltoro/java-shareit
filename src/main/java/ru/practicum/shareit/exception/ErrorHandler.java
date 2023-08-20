@@ -7,6 +7,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +25,29 @@ public class ErrorHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(violations);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<List<ResponseError>> handleConstraintViolationException(ConstraintViolationException e) {
+            log.error(e.getMessage());
+            final List<ResponseError> violations = e.getConstraintViolations().stream()
+                    .map(error -> new ResponseError(error.getMessage()))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(violations);
+    }
+
     @ExceptionHandler(ItemNotFoundException.class)
     public ResponseEntity<ResponseError> itemAlreadyExistException(ItemNotFoundException e) {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(new ResponseError(e.getMessage()));
+    }
+
+    @ExceptionHandler(ItemNotAvailableException.class)
+    public ResponseEntity<ResponseError> itemNotAvailableException(ItemNotAvailableException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseError(e.getMessage()));
     }
 
@@ -53,6 +72,22 @@ public class ErrorHandler {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
+                .body(new ResponseError(e.getMessage()));
+    }
+
+    @ExceptionHandler(BookingEndDateValidationException.class)
+    public ResponseEntity<ResponseError> bookingEndDateValidationException(BookingEndDateValidationException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseError(e.getMessage()));
+    }
+
+    @ExceptionHandler(BookingNotFoundException.class)
+    public ResponseEntity<ResponseError> bookingNotFoundException(BookingNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(new ResponseError(e.getMessage()));
     }
 
