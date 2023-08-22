@@ -91,4 +91,20 @@ public class ErrorHandler {
                 .body(new ResponseError(e.getMessage()));
     }
 
+    @ExceptionHandler(UnknownStateException.class)
+    public ResponseEntity<ResponseError> unknownStateException(UnknownStateException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseError(e.getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ResponseError> notFoundException(NotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ResponseError(e.getMessage()));
+    }
+
 }

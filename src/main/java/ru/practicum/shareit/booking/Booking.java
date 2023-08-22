@@ -24,23 +24,22 @@ public class Booking {
     private long id;
 
     @Column(name = "start_date", nullable = false)
-    @FutureOrPresent(message = "Дата начала аренды не должна быть в прошлом")
     private LocalDateTime start;
 
     @Column(name = "end_date", nullable = false)
-    @Future(message = "Дата завершения аренды не должна быть в прошлом")
     private LocalDateTime end;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "item_id")
     private Item item;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booker_id")
     private User booker;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private Status status;
+    //@Enumerated(EnumType.STRING)
+    @Column(name = "status" )
+    private String status;
 
     public enum Status {
         WAITING,

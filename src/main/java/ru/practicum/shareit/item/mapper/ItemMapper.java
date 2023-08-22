@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import ru.practicum.shareit.item.dto.ItemBookingDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemOwnerDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface ItemMapper {
     List<ItemDto> toItemDtoList(Iterable<Item> items);
 
     ItemBookingDto toItemBookingDto(Item item);
+
+    ItemOwnerDto toItemOwnerDto(Item item);
 }

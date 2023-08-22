@@ -10,6 +10,13 @@ import java.util.List;
 @Repository
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
+    List<Item> findAllByUserIdOrderByIdAsc(long userId);
+
+    @Query("SELECT i FROM Item i " +
+            "LEFT JOIN Booking l ON i.id = l.item.id AND l.end < CURRENT_TIMESTAMP " +
+            "LEFT JOIN Booking n ON i.id = n.item.id AND n.start > CURRENT_TIMESTAMP " +
+            "WHERE i.user.id = ?1 " +
+            "ORDER BY i.id ASC")
     List<Item> findByUserId(long userId);
 
     @Query("SELECT i FROM Item i " +

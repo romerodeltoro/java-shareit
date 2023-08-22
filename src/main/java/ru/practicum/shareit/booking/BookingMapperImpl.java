@@ -3,11 +3,17 @@ package ru.practicum.shareit.booking;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingReplyDto;
+import ru.practicum.shareit.booking.dto.LastBookingDto;
+import ru.practicum.shareit.booking.dto.NextBookingDto;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class BookingMapperImpl implements BookingMapper{
@@ -21,8 +27,8 @@ public class BookingMapperImpl implements BookingMapper{
         }
         return BookingDto.builder()
                 .id(booking.getId())
-                .start(booking.getStart().toString())
-                .end(booking.getEnd().toString())
+                .start(booking.getStart())
+                .end(booking.getEnd())
                 .build();
     }
 
@@ -30,8 +36,8 @@ public class BookingMapperImpl implements BookingMapper{
     public BookingReplyDto toBookingReplyDto(Booking booking) {
         BookingReplyDto replyDto = new BookingReplyDto();
         replyDto.setId(booking.getId());
-        replyDto.setStart(booking.getStart().toString());
-        replyDto.setEnd(booking.getEnd().toString());
+        replyDto.setStart(booking.getStart());
+        replyDto.setEnd(booking.getEnd());
         replyDto.setStatus(String.valueOf(booking.getStatus()));
         replyDto.setBooker(UserMapper.INSTANCE.toUserBookingDto(booking.getBooker()));
         replyDto.setItem(ItemMapper.INSTANCE.toItemBookingDto(booking.getItem()));
@@ -46,8 +52,40 @@ public class BookingMapperImpl implements BookingMapper{
         }
         return Booking.builder()
                 .id(bookingDto.getId())
-                .start(LocalDateTime.parse(bookingDto.getStart(), formatter))
-                .end(LocalDateTime.parse(bookingDto.getEnd(), formatter))
+                .start(bookingDto.getStart())
+                .end(bookingDto.getEnd())
                 .build();
     }
+
+    @Override
+    public List<BookingReplyDto> toBookingReplyDtoList(Iterable<Booking> bookings) {
+        List<BookingReplyDto> result = new ArrayList<>();
+        for (Booking booking : bookings) {
+            result.add(toBookingReplyDto(booking));
+        }
+        return result;
+    }
+
+    @Override
+    public LastBookingDto lastBookingDto(Booking booking) {
+        if (booking == null) {
+            return null;
+        }
+        return LastBookingDto.builder()
+                .id(booking.getId())
+                .bookerId(booking.getBooker().getId())
+                .build();
+    }
+
+    @Override
+    public NextBookingDto nextBookingDto(Booking booking) {
+        if (booking == null) {
+            return null;
+        }
+        return NextBookingDto.builder()
+                .id(booking.getId())
+                .bookerId(booking.getBooker().getId())
+                .build();
+    }
+
 }

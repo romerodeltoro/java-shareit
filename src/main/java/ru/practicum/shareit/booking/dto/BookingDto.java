@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -17,10 +18,12 @@ public class BookingDto {
     private long id;
 
     @NotNull
-    private String start;
+    @FutureOrPresent(message = "Дата начала аренды не должна быть в прошлом")
+    private LocalDateTime start;
 
     @NotNull
-    private String end;
+    @Future(message = "Дата завершения аренды не должна быть в прошлом")
+    private LocalDateTime end;
 
     private long itemId;
 
