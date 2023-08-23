@@ -8,16 +8,10 @@ public class NotEqualToDateValidator implements ConstraintValidator<NotEqualToDa
 
     private LocalDateTime otherDate;
 
-    /*@Override
-    public void initialize(NotEqualToDate constraintAnnotation) {
-
-        this.otherDate = constraintAnnotation.otherDate();
-    }*/
-
     @Override
     public boolean isValid(LocalDateTime value, ConstraintValidatorContext context) {
 
-        return value.isAfter(otherDate); //!value.equals(otherDate);
+        return value.isAfter(otherDate);
     }
 
 }

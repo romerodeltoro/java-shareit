@@ -31,6 +31,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDto createUser(UserDto userDto) {
+
+
         User user = repository.save(UserMapper.INSTANCE.toUser(userDto));
         log.info("Создан новый пользователь: '{}'", user);
         return UserMapper.INSTANCE.toUserDto(user);
@@ -64,7 +66,7 @@ public class UserServiceImpl implements UserService {
         log.info("Пользователь с id '{}' - удален", userId);
     }
 
-    //@Transactional(readOnly = true)
+
     @Override
     public List<UserDto> getAllUsers() {
         return UserMapper.INSTANCE.toUserDtoList(repository.findAll());

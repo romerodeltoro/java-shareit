@@ -89,7 +89,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("select b " +
             "from Booking b " +
             "where b.item.id = ?1 " +
-            "and b.end < CURRENT_TIMESTAMP " +
+            "and b.start < CURRENT_TIMESTAMP " +
             "ORDER by b.start DESC" )
     List<Booking> findFirstByItemIdAndEndDateBefore(long itemId);
 
@@ -97,6 +97,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "from Booking b " +
             "where b.item.id = ?1 " +
             "and b.start > CURRENT_TIMESTAMP " +
+            "and b.status = 'APPROVED' " +
             "ORDER by b.start asc")
     List<Booking> findFirstByItemIdAndStartDateAfter(long itemId);
+
+    List<Booking> findAllByItemIdAndBookerId(long itemId, long bookerI);
 }

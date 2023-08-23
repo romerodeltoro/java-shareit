@@ -107,4 +107,12 @@ public class ErrorHandler {
                 .body(new ResponseError(e.getMessage()));
     }
 
+    @ExceptionHandler(ItemBookerException.class)
+    public ResponseEntity<ResponseError> itemBookerException(ItemBookerException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseError(e.getMessage()));
+    }
+
 }
