@@ -72,8 +72,8 @@ public class ItemControllerTest {
                 itemController.getItem(userId, id)
                         .getBody().getName(), "Названия не совпадают.");
         assertEquals(createdItem.getDescription(),
-                itemController.getItem(userId, id).
-                        getBody().getDescription(), "Описания не совпадат.");
+                itemController.getItem(userId, id)
+                        .getBody().getDescription(), "Описания не совпадат.");
     }
 
     @Test
