@@ -1,10 +1,12 @@
 package ru.practicum.shareit.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.exception.UserEmailAlreadyExistException;
 import ru.practicum.shareit.user.UserController;
@@ -20,11 +22,15 @@ import static org.junit.jupiter.api.Assertions.*;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserControllerTest {
 
-/*
     private final UserController userController;
 
-    private final UserDto userDto = UserDto.builder().name("User").email("user@user.com").build();
+    private final UserDto userDto = new UserDto();
 
+    @BeforeEach
+    void initial() {
+        userDto.setName("User");
+        userDto.setEmail("user@user.com");
+    }
 
     @Test
     @DisplayName("Создание пользователя")
@@ -32,27 +38,33 @@ public class UserControllerTest {
         final UserDto createdUser = userController.createUser(userDto).getBody();
         final long id = createdUser.getId();
 
-        assertEquals(createdUser,
-                userController.getUser(id).getBody(), "Пользователи не совпадают.");
+        assertEquals(createdUser.getName(),
+                userController.getUser(id).getBody().getName(), "Имена не совпадают.");
+        assertEquals(createdUser.getEmail(),
+                userController.getUser(id).getBody().getEmail(), "Email не совпадают.");
     }
 
     @Test
     @DisplayName("Создание пользователя с занятым email")
     void addUserWithSameEmail() {
         userController.createUser(userDto);
-        final UserDto userWithSameEmail = UserDto.builder().name("User").email("user@user.com").build();
+        final UserDto userWithSameEmail = new UserDto();
+        userWithSameEmail.setName("User");
+        userWithSameEmail.setEmail("user@user.com");
 
-        final UserEmailAlreadyExistException e = assertThrows(
-                UserEmailAlreadyExistException.class,
+        final Throwable e = assertThrows(
+                Throwable.class,
                 () -> userController.createUser(userWithSameEmail)
         );
-        assertEquals("Пользователь с email user@user.com уже существует", e.getMessage());
+        assertTrue(e instanceof DataIntegrityViolationException);
+
     }
 
     @Test
     @DisplayName("Создание пользователя без email")
     void addUserWithOutEmail() {
-        UserDto userWithOutEmail = UserDto.builder().name("User").build();
+        UserDto userWithOutEmail = new UserDto();
+        userWithOutEmail.setName("User");
 
         final ValidationException e = assertThrows(
                 ValidationException.class,
@@ -65,7 +77,9 @@ public class UserControllerTest {
     @Test
     @DisplayName("Создание пользователя не корректным email")
     void addUserWithWrongEmail() {
-        UserDto userWithWrongEmail = UserDto.builder().name("User").email("user.com").build();
+        UserDto userWithWrongEmail = new UserDto();
+        userWithWrongEmail.setName("User");
+        userWithWrongEmail.setEmail("user.com");
 
         final ValidationException e = assertThrows(
                 ValidationException.class,
@@ -79,7 +93,8 @@ public class UserControllerTest {
     @DisplayName("Обновление пользователя - только имя")
     void updateUserOnlyName() {
         final long id = userController.createUser(userDto).getBody().getId();
-        final UserDto userWithName = UserDto.builder().name("updateName").build();
+        final UserDto userWithName = new UserDto();
+        userWithName.setName("updateName");
         final UserDto updatedUser = userController.updateUser(id, userWithName).getBody();
         final String updatedName = updatedUser.getName();
 
@@ -91,7 +106,8 @@ public class UserControllerTest {
     @DisplayName("Обновление пользователя - только почта")
     void updateUserOnlyEmail() {
         final long id = userController.createUser(userDto).getBody().getId();
-        final UserDto userWithEmail = UserDto.builder().email("updateName@user.com").build();
+        final UserDto userWithEmail = new UserDto();
+        userWithEmail.setEmail("updateName@user.com");
         final UserDto updatedUser = userController.updateUser(id, userWithEmail).getBody();
         final String updatedEmail = updatedUser.getEmail();
 
@@ -103,25 +119,32 @@ public class UserControllerTest {
     @DisplayName("Обновление пользователя такой же почтой")
     void updateUserWithSameEmail() {
         final long id = userController.createUser(userDto).getBody().getId();
-        final UserDto userWithEmail = UserDto.builder().email("user@user.com").build();
+        final UserDto userWithEmail = new UserDto();
+        userWithEmail.setEmail("user@user.com");
         final UserDto updatedUser = userController.updateUser(id, userWithEmail).getBody();
 
-        assertEquals(userController.getUser(id).getBody(),
-                updatedUser, "Пользователи не совпадают.");
+        assertEquals(userController.getUser(id).getBody().getName(),
+                updatedUser.getName(), "Имена не совпадают.");
+        assertEquals(userController.getUser(id).getBody().getEmail(),
+                updatedUser.getEmail(), "Email не совпадают.");
     }
 
     @Test
     @DisplayName("Обновление пользователя уже занятой почтой")
     void updateUserWithExistEmail() {
         final long id = userController.createUser(userDto).getBody().getId();
-        userController.createUser(UserDto.builder().name("User").email("newUser@user.com").build());
-        final UserDto userWithExistEmail = UserDto.builder().email("newUser@user.com").build();
+        final UserDto createdUser = new UserDto();
+        createdUser.setName("User");
+        createdUser.setEmail("newUser@user.com");
+        userController.createUser(createdUser);
+        final UserDto userWithExistEmail = new UserDto();
+        userWithExistEmail.setEmail("newUser@user.com");
 
         final UserEmailAlreadyExistException e = assertThrows(
                 UserEmailAlreadyExistException.class,
                 () -> userController.updateUser(id, userWithExistEmail)
         );
-        assertEquals("Пользователь с email newUser@user.com уже существует", e.getMessage());
+        assertEquals("Email newUser@user.com уже существует", e.getMessage());
     }
 
     @Test
@@ -131,19 +154,32 @@ public class UserControllerTest {
         final long id = createdUser.getId();
         final UserDto receivedUser = userController.getUser(id).getBody();
 
-        assertEquals(receivedUser,
-                createdUser, "Пользователи не совпадают.");
+        assertEquals(receivedUser.getName(),
+                createdUser.getName(), "Имена не совпадают.");
+        assertEquals(receivedUser.getEmail(),
+                createdUser.getEmail(), "Email не совпадают.");
     }
 
     @Test
     @DisplayName("Получение списка пользователей")
     void getAllUsers() {
         userController.createUser(userDto);
-        userController.createUser(UserDto.builder().name("User").email("newUser@user.com").build());
+        final UserDto createdUser = new UserDto();
+        createdUser.setName("User");
+        createdUser.setEmail("newUser@user.com");
+        userController.createUser(createdUser);
         final List<UserDto> users = userController.getAllUsers().getBody();
 
-        assertEquals(users,
-                userController.getAllUsers().getBody(), "Списки не совпадают.");
+        assertEquals(users.size(),
+                userController.getAllUsers().getBody().size(), "Списки не совпадают.");
+        assertEquals(users.get(0).getName(),
+                userController.getAllUsers().getBody().get(0).getName(), "Пользователи не совпадают.");
+        assertEquals(users.get(0).getEmail(),
+                userController.getAllUsers().getBody().get(0).getEmail(), "Пользователи не совпадают.");
+        assertEquals(users.get(1).getName(),
+                userController.getAllUsers().getBody().get(1).getName(), "Пользователи не совпадают.");
+        assertEquals(users.get(1).getEmail(),
+                userController.getAllUsers().getBody().get(1).getEmail(), "Пользователи не совпадают.");
     }
 
     @Test
@@ -153,5 +189,6 @@ public class UserControllerTest {
         userController.deleteUser(createdUser.getId());
 
         assertTrue(userController.getAllUsers().getBody().isEmpty());
-    }*/
+    }
+
 }
