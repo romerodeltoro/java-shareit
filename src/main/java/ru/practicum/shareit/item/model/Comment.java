@@ -6,8 +6,9 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter @Setter @ToString
-@Builder
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "comments", schema = "public")
 @NoArgsConstructor

@@ -1,17 +1,16 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.booking.dto.LastBookingDto;
 import ru.practicum.shareit.booking.dto.NextBookingDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+
+@Getter
+@Setter
 public class ItemOwnerDto extends ItemDto {
     private Long id;
     private String name;

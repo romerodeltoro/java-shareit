@@ -1,4 +1,4 @@
-package ru.practicum.shareit.booking;
+package ru.practicum.shareit.booking.model;
 
 import lombok.*;
 import ru.practicum.shareit.item.model.Item;
@@ -7,8 +7,9 @@ import ru.practicum.shareit.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter @Setter @ToString
-@Builder
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "booking", schema = "public")
 @NoArgsConstructor
@@ -34,15 +35,8 @@ public class Booking {
     @JoinColumn(name = "booker_id")
     private User booker;
 
-    //@Enumerated(EnumType.STRING)
-    @Column(name = "status" )
+    @Column(name = "status")
     private String status;
 
-    public enum Status {
-        WAITING,
-        APPROVED,
-        REJECTED,
-        CANCELED
-    }
 
 }
