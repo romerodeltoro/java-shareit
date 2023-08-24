@@ -48,11 +48,6 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private final CommentRepository commentRepository;
 
-    /*@Autowired
-    private final ItemMapper itemMapper;
-
-    @Autowired
-    private final BookingMapper bookingMapper;*/
 
     @Transactional
     @Override
@@ -84,7 +79,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = ifItemExistReturnItem(itemId);
         List<CommentDto> comments = getCommentsByItemId(itemId);
 
-        if(item.getUser().getId() != userId) {
+        if (item.getUser().getId() != userId) {
             ItemOwnerDto itemOwnerDto = ItemMapper.INSTANCE.toItemOwnerDto(item);
             itemOwnerDto.setComments(comments);
             log.info("Получена вещь '{}'", item);
@@ -128,11 +123,6 @@ public class ItemServiceImpl implements ItemService {
         log.info("Получен список вещей пользователя с id '{}'", userId);
         return itemDtos;
 
-
-
-        /*return itemRepository.findByUserId(userId).stream()
-                .map(ItemMapper.INSTANCE::toItemOwnerDto)
-                .collect(Collectors.toList());*/
     }
 
     @Override
@@ -141,9 +131,12 @@ public class ItemServiceImpl implements ItemService {
             log.info("Не было найдено ни одного предмета по запросу '{}'", searchText);
             return Collections.emptyList();
         }
-        List<Item> items = itemRepository.findByUserAndNameOrDescription(userId, searchText);
+        List<ItemDto> items = itemRepository.findByUserAndNameOrDescription(userId, searchText)
+                .stream()
+                .map(ItemMapper.INSTANCE::toItemDto)
+                .collect(Collectors.toList());
 
-        return ItemMapper.INSTANCE.toItemDtoList(items);
+        return items;
     }
 
     @Override
@@ -161,7 +154,7 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .filter(b -> b.getEnd().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
-        if(bookings.size() == 0) {
+        if (bookings.size() == 0) {
             throw new ItemBookerException(
                     String.format("Вещь с id %d не была арендована пользователем с id %d", itemId, userId));
         }

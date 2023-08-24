@@ -25,14 +25,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserRepository repository;
 
-   /* @Autowired
-    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);*/
 
     @Transactional
     @Override
     public UserDto createUser(UserDto userDto) {
-
-
         User user = repository.save(UserMapper.INSTANCE.toUser(userDto));
         log.info("Создан новый пользователь: '{}'", user);
         return UserMapper.INSTANCE.toUserDto(user);

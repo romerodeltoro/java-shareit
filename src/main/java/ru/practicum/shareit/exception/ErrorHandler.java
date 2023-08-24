@@ -27,12 +27,12 @@ public class ErrorHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<List<ResponseError>> handleConstraintViolationException(ConstraintViolationException e) {
-            log.error(e.getMessage());
-            final List<ResponseError> violations = e.getConstraintViolations().stream()
-                    .map(error -> new ResponseError(error.getMessage()))
-                    .collect(Collectors.toList());
+        log.error(e.getMessage());
+        final List<ResponseError> violations = e.getConstraintViolations().stream()
+                .map(error -> new ResponseError(error.getMessage()))
+                .collect(Collectors.toList());
 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(violations);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(violations);
     }
 
     @ExceptionHandler(ItemNotFoundException.class)

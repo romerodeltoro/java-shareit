@@ -1,7 +1,9 @@
 package ru.practicum.shareit.booking;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingReplyDto;
 import ru.practicum.shareit.booking.dto.LastBookingDto;
@@ -22,7 +24,9 @@ public interface BookingMapper {
 
     List<BookingReplyDto> toBookingReplyDtoList(Iterable<Booking> bookings);
 
+    @Mapping(target = "bookerId", source = "booking.booker.id")
     LastBookingDto lastBookingDto(Booking booking);
 
+    @Mapping(target = "bookerId", source = "booking.booker.id")
     NextBookingDto nextBookingDto(Booking booking);
 }

@@ -25,13 +25,6 @@ public class BookingController {
         return ResponseEntity.ok().body(bookingService.createBooking(userId, bookingDto));
     }
 
-    /*@PatchMapping
-    public ResponseEntity<BookingDto> updateBooking(
-            @RequestHeader("X-Sharer-User-Id") long userId,
-            @Valid @RequestBody BookingDto bookingDto) {
-        return ResponseEntity.ok().body(bookingService.updateBooking(userId, bookingDto));
-    }*/
-
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingDto> approvingBooking(
             @RequestHeader("X-Sharer-User-Id") long userId,

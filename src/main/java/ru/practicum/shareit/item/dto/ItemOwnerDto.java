@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemOwnerDto extends ItemDto{
+public class ItemOwnerDto extends ItemDto {
     private Long id;
     private String name;
     private String description;

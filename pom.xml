@@ -107,6 +107,14 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>11</source>
+                    <target>11</target>
+                </configuration>
+            </plugin>
 
 
         </plugins>
@@ -114,62 +122,35 @@
             <plugins>
 
                 <plugin>
-                    <groupId>org.projectlombok</groupId>
-                    <artifactId>lombok-maven-plugin</artifactId>
-                    <version>${org.projectlombok.maven.version}</version>
-                    <executions>
-                        <execution>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>delombok</goal>
-                            </goals>
-                            <configuration>
-                                <sourceDirectory>src/main/java</sourceDirectory>
-                                <addOutputDirectory>false</addOutputDirectory>
-                                <outputDirectory>${project.build.directory}/generated-sources/delombok</outputDirectory>
-                                <verbose>true</verbose>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.bsc.maven</groupId>
-                    <artifactId>maven-processor-plugin</artifactId>
-                    <version>2.2.4</version>
-                    <configuration>
-                        <defaultOutputDirectory>
-                            ${project.build.directory}/generated-sources/mapstruct
-                        </defaultOutputDirectory>
-                        <processors>
-                            <processor>org.mapstruct.ap.MappingProcessor</processor>
-                        </processors>
-                        <sourceDirectory>
-                            ${project.build.directory}/generated-sources/delombok
-                        </sourceDirectory>
-                        <options>
-                            <mapstruct.defaultComponentModel>spring</mapstruct.defaultComponentModel>
-                        </options>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>process</id>
-                            <phase>generate-sources</phase>
-                            <goals>
-                                <goal>process</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.5.1</version>
+                    <version>3.8.1</version>
                     <configuration>
-                        <annotationProcessors>
-                            <annotationProcessor>
-                                lombok.launch.AnnotationProcessorHider$AnnotationProcessor
-                            </annotationProcessor>
-                        </annotationProcessors>
+                        <source>1.8</source> <!-- depending on your project -->
+                        <target>1.8</target> <!-- depending on your project -->
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${org.mapstruct.version}</version>
+                            </path>
+                            <!-- other annotation processors -->
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                                <version>${lombok.version}</version>
+                            </path>
+                            <dependency>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok-mapstruct-binding</artifactId>
+                                <version>0.2.0</version>
+                            </dependency>
+                        </annotationProcessorPaths>
+                        <compilerArgs>
+                            <compilerArg>
+                                -Amapstruct.defaultComponentModel=spring
+                            </compilerArg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
 

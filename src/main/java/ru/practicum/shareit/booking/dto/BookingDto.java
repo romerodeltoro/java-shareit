@@ -10,7 +10,7 @@ import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
+//@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingDto {
@@ -27,19 +27,5 @@ public class BookingDto {
 
     private long itemId;
 
-/*private String status;
-    private UserBookingDto booker;
-    private ItemBookingDto item;*/
-
-
-    /*@AssertTrue(message = "Дата начала аренды должна быть раньше даты ее завершения")
-    public boolean isStartBeforeEnd() {
-        return start.isBefore(end);
-    }
-
-    @AssertTrue(message = "Дата начала аренды не должна совпадать с датой завершения")
-    public boolean isStartNotEqualToEnd() {
-        return start != end;
-    }*/
 
 }

@@ -14,9 +14,6 @@ import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
 
     @Autowired
     private final BookingRepository bookingRepository;
@@ -44,10 +41,10 @@ public class BookingServiceImpl implements BookingService{
     public BookingDto createBooking(long userId, BookingDto bookingDto) {
         User user = userService.ifUserExistReturnUser(userId);
         Item item = itemService.ifItemExistReturnItem(bookingDto.getItemId());
-        if(!item.getAvailable()) {
+        if (!item.getAvailable()) {
             throw new ItemNotAvailableException(String.format("Вещь %s не доступна для бронирования", item));
         }
-        if(userId == item.getUser().getId()) {
+        if (userId == item.getUser().getId()) {
             throw new NotFoundException(
                     String.format("Вещь %s не доступна для бронирования для пользователя %s", item, user));
         }
@@ -102,12 +99,12 @@ public class BookingServiceImpl implements BookingService{
         Item item = itemRepository.findById(booking.getItem().getId()).get();
         userService.ifUserExistReturnUser(userId);
 
-       if (userId != item.getUser().getId() && userId != booking.getBooker().getId()) {
+        if (userId != item.getUser().getId() && userId != booking.getBooker().getId()) {
             throw new BookingNotFoundException("У вас нет доступа к этой брони");
-       }
+        }
 
-       log.info("Получена бронь '{}'", booking);
-       return BookingMapper.INSTANCE.toBookingReplyDto(booking);
+        log.info("Получена бронь '{}'", booking);
+        return BookingMapper.INSTANCE.toBookingReplyDto(booking);
     }
 
     @Override
@@ -153,7 +150,8 @@ public class BookingServiceImpl implements BookingService{
             case "REJECTED":
                 return bookingRepository.findAllByBookerIdAndStatusOrderByStartDateDesc(userId, state);
 
-            default: throw new UnknownStateException(String.format("Unknown state: %s", state));
+            default:
+                throw new UnknownStateException(String.format("Unknown state: %s", state));
         }
     }
 
@@ -176,7 +174,8 @@ public class BookingServiceImpl implements BookingService{
             case "REJECTED":
                 return bookingRepository.findAllByOwnerIdAndStatusOrderByStartDateDesc(userId, state);
 
-            default: throw new UnknownStateException(String.format("Unknown state: %s", state));
+            default:
+                throw new UnknownStateException(String.format("Unknown state: %s", state));
         }
     }
 

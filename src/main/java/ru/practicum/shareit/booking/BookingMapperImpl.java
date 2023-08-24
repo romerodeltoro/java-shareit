@@ -1,3 +1,4 @@
+/*
 package ru.practicum.shareit.booking;
 
 import org.springframework.stereotype.Component;
@@ -5,20 +6,14 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingReplyDto;
 import ru.practicum.shareit.booking.dto.LastBookingDto;
 import ru.practicum.shareit.booking.dto.NextBookingDto;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class BookingMapperImpl implements BookingMapper{
-
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+public class BookingMapperImpl implements BookingMapper {
 
     @Override
     public BookingDto toBookingDto(Booking booking) {
@@ -89,3 +84,4 @@ public class BookingMapperImpl implements BookingMapper{
     }
 
 }
+*/

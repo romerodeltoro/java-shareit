@@ -1,6 +1,6 @@
+/*
 package ru.practicum.shareit.user.mapper;
 
-import org.springframework.stereotype.Component;
 import ru.practicum.shareit.user.dto.UserBookingDto;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
@@ -9,8 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-public class UserMapperImpl implements UserMapper{
+public class UserMapperImpl implements UserMapper {
 
     public UserDto toUserDto(User user) {
         if (user == null) {
@@ -51,3 +50,4 @@ public class UserMapperImpl implements UserMapper{
                 .build();
     }
 }
+*/

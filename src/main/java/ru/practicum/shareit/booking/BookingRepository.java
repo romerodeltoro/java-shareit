@@ -4,7 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @Repository
@@ -23,7 +22,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "ORDER by b.start DESC")
     List<Booking> findAllByBookerIdAndEndDateBefore(long bookerId);
 
-   @Query("select b " +
+    @Query("select b " +
             "from Booking b " +
             "where b.booker.id = ?1 " +
             "and b.start > CURRENT_TIMESTAMP " +
@@ -90,7 +89,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "from Booking b " +
             "where b.item.id = ?1 " +
             "and b.start < CURRENT_TIMESTAMP " +
-            "ORDER by b.start DESC" )
+            "ORDER by b.start DESC")
     List<Booking> findFirstByItemIdAndEndDateBefore(long itemId);
 
     @Query("select b " +
