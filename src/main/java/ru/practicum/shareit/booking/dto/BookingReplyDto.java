@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @ToString
 public class BookingReplyDto extends BookingDto {
 
-    private long id;
+    private Long id;
     private LocalDateTime start;
     private LocalDateTime end;
     private UserBookingDto booker;

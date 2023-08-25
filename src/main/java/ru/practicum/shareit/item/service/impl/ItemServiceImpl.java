@@ -2,15 +2,15 @@ package ru.practicum.shareit.item.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.ItemBookerException;
 import ru.practicum.shareit.exception.ItemNotFoundException;
 import ru.practicum.shareit.exception.ItemOwnerException;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
@@ -22,7 +22,7 @@ import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,23 +36,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-    @Autowired
+
     private final ItemRepository itemRepository;
 
-    @Autowired
-    private final UserService userService;
 
-    @Autowired
+    private final UserRepository userRepository;
+
+
     private final BookingRepository bookingRepository;
 
-    @Autowired
+
     private final CommentRepository commentRepository;
 
 
     @Transactional
     @Override
     public ItemDto createItem(long userId, ItemDto itemDto) {
-        User user = userService.ifUserExistReturnUser(userId);
+        User user = ifUserExistReturnUser(userId);
         Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto));
         item.setUser(user);
         log.info("Создана новая вещь - '{}'", item);
@@ -63,7 +63,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
-        User user = userService.ifUserExistReturnUser(userId);
+        User user = ifUserExistReturnUser(userId);
         Item item = ifItemExistReturnItem(itemId);
         itemOwnerCheck(user.getId(), item.getUser().getId());
         item.setName(itemDto.getName() != null ? itemDto.getName() : item.getName());
@@ -102,7 +102,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getAllUserItems(long userId) {
-        userService.ifUserExistReturnUser(userId);
+        ifUserExistReturnUser(userId);
 
         List<Item> items = itemRepository.findAllByUserIdOrderByIdAsc(userId);
         List<ItemDto> itemDtos = new ArrayList<>();
@@ -148,7 +148,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public CommentDto postComment(long userId, long itemId, CommentDto commentDto) {
-        User user = userService.ifUserExistReturnUser(userId);
+        User user = ifUserExistReturnUser(userId);
         Item item = ifItemExistReturnItem(itemId);
         List<Booking> bookings = bookingRepository.findAllByItemIdAndBookerId(itemId, userId)
                 .stream()
@@ -177,5 +177,10 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .map(CommentMapper.INSTANCE::toCommentDto)
                 .collect(Collectors.toList());
+    }
+
+    private User ifUserExistReturnUser(long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(
+                String.format("Пользователя с id %d нет в базе", userId)));
     }
 }

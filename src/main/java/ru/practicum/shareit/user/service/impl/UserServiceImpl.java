@@ -2,7 +2,6 @@ package ru.practicum.shareit.user.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.UserEmailAlreadyExistException;
@@ -22,7 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+
     private final UserRepository repository;
 
 
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.toUserDtoList(repository.findAll());
     }
 
-    public User ifUserExistReturnUser(long userId) {
+    private User ifUserExistReturnUser(long userId) {
         return repository.findById(userId).orElseThrow(() -> new UserNotFoundException(
                 String.format("Пользователя с id %d нет в базе", userId)));
     }

@@ -2,21 +2,20 @@ package ru.practicum.shareit.booking.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.service.BookingService;
+import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.user.storage.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,23 +26,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-    @Autowired
+
     private final BookingRepository bookingRepository;
 
-    @Autowired
+
     private final ItemRepository itemRepository;
 
-    @Autowired
-    private final UserService userService;
 
-    @Autowired
+    private final UserRepository userRepository;
+
+
     private final ItemService itemService;
 
 
     @Override
     @Transactional
     public BookingDto createBooking(long userId, BookingDto bookingDto) {
-        User user = userService.ifUserExistReturnUser(userId);
+        User user = ifUserExistReturnUser(userId);
         Item item = itemService.ifItemExistReturnItem(bookingDto.getItemId());
         if (!item.getAvailable()) {
             throw new ItemNotAvailableException(String.format("Вещь %s не доступна для бронирования", item));
@@ -65,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDto updateBooking(long userId, BookingDto bookingDto) {
-        User user = userService.ifUserExistReturnUser(userId);
+        User user = ifUserExistReturnUser(userId);
         Item item = itemService.ifItemExistReturnItem(bookingDto.getItemId());
         Booking booking = bookingRepository.save(BookingMapper.INSTANCE.toBooking(bookingDto));
         booking.setItem(item);
@@ -82,7 +81,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto approvingBooking(long userId, long bookingId, boolean approved) {
         Booking booking = ifBookingExistReturnBooking(bookingId);
         Item item = itemService.ifItemExistReturnItem(booking.getItem().getId());
-        userService.ifUserExistReturnUser(userId);
+        ifUserExistReturnUser(userId);
 
         if (userId != item.getUser().getId()) {
             throw new BookingNotFoundException(
@@ -101,7 +100,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto getBooking(long userId, long bookingId) {
         Booking booking = ifBookingExistReturnBooking(bookingId);
         Item item = itemRepository.findById(booking.getItem().getId()).get();
-        userService.ifUserExistReturnUser(userId);
+        ifUserExistReturnUser(userId);
 
         if (userId != item.getUser().getId() && userId != booking.getBooker().getId()) {
             throw new BookingNotFoundException("У вас нет доступа к этой брони");
@@ -113,7 +112,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getUserAllBooking(long userId, String state) {
-        userService.ifUserExistReturnUser(userId);
+        ifUserExistReturnUser(userId);
         List<Booking> bookings = getBookingListByState(userId, state);
 
         log.info("Получен список бронирований с параметром '{}' пользователя с id '{}'", state, userId);
@@ -125,7 +124,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getAllBookingByOwner(long userId, String state) {
-        userService.ifUserExistReturnUser(userId);
+        ifUserExistReturnUser(userId);
         List<Booking> bookings = getBookingListForOwnerByState(userId, state);
 
         log.info("Получен список бронирований вещей пользователя с id '{}' с параметром '{}' ", userId, state);
@@ -194,6 +193,11 @@ public class BookingServiceImpl implements BookingService {
                     String.format("Дата окончания бронирования %s должна быть позже даты начала %s",
                             booking.getEnd(), booking.getStart()));
         }
+    }
+
+    private User ifUserExistReturnUser(long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(
+                String.format("Пользователя с id %d нет в базе", userId)));
     }
 
 

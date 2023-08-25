@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @ToString
 public class BookingDto {
 
-    private long id;
+    private Long id;
 
     @NotNull
     @FutureOrPresent(message = "Дата начала аренды не должна быть в прошлом")

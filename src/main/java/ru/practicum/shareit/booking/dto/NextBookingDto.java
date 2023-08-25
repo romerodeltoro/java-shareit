@@ -9,6 +9,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class NextBookingDto {
-    private long id;
-    private long bookerId;
+    private Long id;
+    private Long bookerId;
 }
