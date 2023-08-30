@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.item.model.Item;
+import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 
@@ -24,5 +26,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "AND LOWER(i.name) LIKE LOWER(CONCAT('%', ?2, '%')) " +
             "OR LOWER(i.description) LIKE LOWER(CONCAT('%', ?2, '%')) " +
             "AND i.available = true")
-    List<Item> findByUserAndNameOrDescription(Long userId, String searchText);
+    List<Item> findByUserAndNameOrDescription(long userId, String searchText);
+
+    List<Item> findAllByRequestId(long requestId);
 }

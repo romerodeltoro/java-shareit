@@ -16,8 +16,6 @@ public interface ItemMapper {
 
     Item toItem(ItemDto itemDto);
 
-    //List<ItemDto> toItemDto(Iterable<Item> items);
-
     ItemBookingDto toItemBookingDto(Item item);
 
     ItemOwnerDto toItemOwnerDto(Item item);

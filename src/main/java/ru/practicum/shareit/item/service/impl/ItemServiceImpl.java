@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -105,21 +106,21 @@ public class ItemServiceImpl implements ItemService {
         ifUserExistReturnUser(userId);
 
         List<Item> items = itemRepository.findAllByUserIdOrderByIdAsc(userId);
-        List<ItemDto> itemDtos = new ArrayList<>();
+        List<ItemDto> itemDtos = items.stream()
+                .map(ItemMapper.INSTANCE::toItemOwnerDto)
+                .peek(itemDto -> {
+                    List<Booking> lastBookings = bookingRepository.findFirstByItemIdAndEndDateBefore(itemDto.getId());
+                    itemDto.setLastBooking(BookingMapper.INSTANCE.lastBookingDto(
+                            lastBookings.stream().findFirst().orElse(null))
+                    );
+                    List<Booking> nextBookings = bookingRepository.findFirstByItemIdAndStartDateAfter(itemDto.getId());
+                    itemDto.setNextBooking(BookingMapper.INSTANCE.nextBookingDto(
+                            nextBookings.stream().findFirst().orElse(null)));
 
-        for (Item item : items) {
-            ItemOwnerDto itemDto = ItemMapper.INSTANCE.toItemOwnerDto(item);
-            List<Booking> lastBookings = bookingRepository.findFirstByItemIdAndEndDateBefore(item.getId());
-            Booking lastBooking = lastBookings.stream().findFirst().orElse(null);
-            List<Booking> nextBookings = bookingRepository.findFirstByItemIdAndStartDateAfter(item.getId());
-            Booking nextBooking = nextBookings.stream().findFirst().orElse(null);
-            List<CommentDto> comments = getCommentsByItemId(item.getId());
-
-            itemDto.setLastBooking(BookingMapper.INSTANCE.lastBookingDto(lastBooking));
-            itemDto.setNextBooking(BookingMapper.INSTANCE.nextBookingDto(nextBooking));
-            itemDto.setComments(comments);
-            itemDtos.add(itemDto);
-        }
+                    List<CommentDto> comments = getCommentsByItemId(itemDto.getId());
+                    itemDto.setComments(comments);
+                })
+                .collect(Collectors.toList());
         log.info("Получен список вещей пользователя с id '{}'", userId);
         return itemDtos;
 

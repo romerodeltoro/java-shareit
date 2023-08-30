@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.storage;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,21 +15,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "from Booking b " +
             "where b.booker.id = ?1 " +
             "ORDER by b.start DESC")
-    List<Booking> findAllByBookerIdOrderByStartDateDesc(long bookerId);
+    List<Booking> findAllByBookerIdOrderByStartDateDesc(long bookerId, Pageable pageable);
 
     @Query("select b " +
             "from Booking b " +
             "where b.booker.id = ?1 " +
             "and b.end < CURRENT_TIMESTAMP " +
             "ORDER by b.start DESC")
-    List<Booking> findAllByBookerIdAndEndDateBefore(long bookerId);
+    List<Booking> findAllByBookerIdAndEndDateBefore(long bookerId, Pageable pageable);
 
     @Query("select b " +
             "from Booking b " +
             "where b.booker.id = ?1 " +
             "and b.start > CURRENT_TIMESTAMP " +
             "ORDER by b.start DESC")
-    List<Booking> findAllByBookerIdAndStartDateAfter(long bookerId);
+    List<Booking> findAllByBookerIdAndStartDateAfter(long bookerId, Pageable pageable);
 
     @Query("select b " +
             "from Booking b " +
@@ -36,14 +37,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.start <= CURRENT_TIMESTAMP " +
             "AND b.end >= CURRENT_TIMESTAMP " +
             "ORDER by b.start DESC")
-    List<Booking> findAllByBookerIdAndDateBeforeAndDateAfter(long bookerId);
+    List<Booking> findAllByBookerIdAndDateBeforeAndDateAfter(long bookerId, Pageable pageable);
 
     @Query("select b " +
             "from Booking b " +
             "where b.booker.id = ?1 " +
             "and b.status = ?2 " +
             "ORDER by b.start DESC")
-    List<Booking> findAllByBookerIdAndStatusOrderByStartDateDesc(long bookerId, String status);
+    List<Booking> findAllByBookerIdAndStatusOrderByStartDateDesc(long bookerId, String status, Pageable pageable);
 
 
     @Query("select b " +
@@ -51,7 +52,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "join b.item as i " +
             "where i.user.id = ?1 " +
             "order by b.start desc")
-    List<Booking> findAllByOwnerIdOrderByStartDateDesc(long ownerId);
+    List<Booking> findAllByOwnerIdOrderByStartDateDesc(long ownerId, Pageable pageable);
 
     @Query("select b " +
             "from Booking as b " +
@@ -59,7 +60,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where i.user.id = ?1 " +
             "and b.end < CURRENT_TIMESTAMP " +
             "order by b.start desc")
-    List<Booking> findAllByOwnerIdAndEndDateBefore(long ownerId);
+    List<Booking> findAllByOwnerIdAndEndDateBefore(long ownerId, Pageable pageable);
 
     @Query("select b " +
             "from Booking as b " +
@@ -67,7 +68,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where i.user.id = ?1 " +
             "and b.start > CURRENT_TIMESTAMP " +
             "order by b.start desc")
-    List<Booking> findAllByOwnerIdAndStartDateAfter(long ownerId);
+    List<Booking> findAllByOwnerIdAndStartDateAfter(long ownerId, Pageable pageable);
 
     @Query("select b " +
             "from Booking as b " +
@@ -76,7 +77,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "AND b.start <= CURRENT_TIMESTAMP " +
             "AND b.end >= CURRENT_TIMESTAMP " +
             "order by b.start desc")
-    List<Booking> findAllByOwnerIdAndDateBeforeAndDateAfter(long ownerId);
+    List<Booking> findAllByOwnerIdAndDateBeforeAndDateAfter(long ownerId, Pageable pageable);
 
     @Query("select b " +
             "from Booking as b " +
@@ -84,7 +85,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "where i.user.id = ?1 " +
             "and b.status = ?2 " +
             "order by b.start desc")
-    List<Booking> findAllByOwnerIdAndStatusOrderByStartDateDesc(long ownerId, String status);
+    List<Booking> findAllByOwnerIdAndStatusOrderByStartDateDesc(long ownerId, String status, Pageable pageable);
 
     @Query("select b " +
             "from Booking b " +

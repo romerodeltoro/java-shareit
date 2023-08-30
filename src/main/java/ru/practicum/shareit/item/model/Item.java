@@ -31,5 +31,7 @@ public class Item {
     @ToString.Exclude
     private User user;
 
+    @Column(name = "request_id")
+    private Long requestId;
 
 }

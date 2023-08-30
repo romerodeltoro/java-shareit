@@ -2,6 +2,8 @@ package ru.practicum.shareit.booking.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,9 +113,10 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getUserAllBooking(long userId, String state) {
+    public List<BookingDto> getUserAllBooking(long userId, String state, int from, int size) {
         ifUserExistReturnUser(userId);
-        List<Booking> bookings = getBookingListByState(userId, state);
+        Pageable pageable = PageRequest.of(from, size);
+        List<Booking> bookings = getBookingListByState(userId, state, pageable);
 
         log.info("Получен список бронирований с параметром '{}' пользователя с id '{}'", state, userId);
         return bookings.stream()
@@ -123,9 +126,10 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<BookingDto> getAllBookingByOwner(long userId, String state) {
+    public List<BookingDto> getAllBookingByOwner(long userId, String state, int from, int size) {
         ifUserExistReturnUser(userId);
-        List<Booking> bookings = getBookingListForOwnerByState(userId, state);
+        Pageable pageable = PageRequest.of(from, size);
+        List<Booking> bookings = getBookingListForOwnerByState(userId, state, pageable);
 
         log.info("Получен список бронирований вещей пользователя с id '{}' с параметром '{}' ", userId, state);
         return bookings.stream()
@@ -134,48 +138,48 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private List<Booking> getBookingListByState(long userId, String state) {
+    private List<Booking> getBookingListByState(long userId, String state, Pageable pageable) {
 
         switch (state) {
             case "ALL":
-                return bookingRepository.findAllByBookerIdOrderByStartDateDesc(userId);
+                return bookingRepository.findAllByBookerIdOrderByStartDateDesc(userId, pageable);
 
             case "PAST":
-                return bookingRepository.findAllByBookerIdAndEndDateBefore(userId);
+                return bookingRepository.findAllByBookerIdAndEndDateBefore(userId, pageable);
 
             case "FUTURE":
-                return bookingRepository.findAllByBookerIdAndStartDateAfter(userId);
+                return bookingRepository.findAllByBookerIdAndStartDateAfter(userId, pageable);
 
             case "CURRENT":
-                return bookingRepository.findAllByBookerIdAndDateBeforeAndDateAfter(userId);
+                return bookingRepository.findAllByBookerIdAndDateBeforeAndDateAfter(userId, pageable);
 
             case "WAITING":
             case "REJECTED":
-                return bookingRepository.findAllByBookerIdAndStatusOrderByStartDateDesc(userId, state);
+                return bookingRepository.findAllByBookerIdAndStatusOrderByStartDateDesc(userId, state, pageable);
 
             default:
                 throw new UnknownStateException(String.format("Unknown state: %s", state));
         }
     }
 
-    private List<Booking> getBookingListForOwnerByState(long userId, String state) {
+    private List<Booking> getBookingListForOwnerByState(long userId, String state, Pageable pageable) {
 
         switch (state) {
             case "ALL":
-                return bookingRepository.findAllByOwnerIdOrderByStartDateDesc(userId);
+                return bookingRepository.findAllByOwnerIdOrderByStartDateDesc(userId, pageable);
 
             case "PAST":
-                return bookingRepository.findAllByOwnerIdAndEndDateBefore(userId);
+                return bookingRepository.findAllByOwnerIdAndEndDateBefore(userId, pageable);
 
             case "FUTURE":
-                return bookingRepository.findAllByOwnerIdAndStartDateAfter(userId);
+                return bookingRepository.findAllByOwnerIdAndStartDateAfter(userId, pageable);
 
             case "CURRENT":
-                return bookingRepository.findAllByOwnerIdAndDateBeforeAndDateAfter(userId);
+                return bookingRepository.findAllByOwnerIdAndDateBeforeAndDateAfter(userId, pageable);
 
             case "WAITING":
             case "REJECTED":
-                return bookingRepository.findAllByOwnerIdAndStatusOrderByStartDateDesc(userId, state);
+                return bookingRepository.findAllByOwnerIdAndStatusOrderByStartDateDesc(userId, state, pageable);
 
             default:
                 throw new UnknownStateException(String.format("Unknown state: %s", state));
