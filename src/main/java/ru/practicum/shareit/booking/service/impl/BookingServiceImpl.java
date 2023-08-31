@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -115,13 +116,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getUserAllBooking(long userId, String state, int from, int size) {
         ifUserExistReturnUser(userId);
-        Pageable pageable = PageRequest.of(from, size);
-        List<Booking> bookings = getBookingListByState(userId, state, pageable);
+
+        List<Booking> bookings = getElementsFromPage(userId, state, from, size).getContent();
 
         log.info("Получен список бронирований с параметром '{}' пользователя с id '{}'", state, userId);
         return bookings.stream()
                 .map(BookingMapper.INSTANCE::toBookingReplyDto)
-                //.sorted(Comparator.comparing(BookingDto::getStart).reversed())
                 .collect(Collectors.toList());
     }
 
@@ -129,7 +129,15 @@ public class BookingServiceImpl implements BookingService {
     public List<BookingDto> getAllBookingByOwner(long userId, String state, int from, int size) {
         ifUserExistReturnUser(userId);
         Pageable pageable = PageRequest.of(from, size);
-        List<Booking> bookings = getBookingListForOwnerByState(userId, state, pageable);
+        Page<Booking> bookingPage = getBookingListForOwnerByState(userId, state, pageable);
+        while (bookingPage.isEmpty()) {
+            if (bookingPage.getPageable().hasPrevious()) {
+                bookingPage = getBookingListForOwnerByState(userId, state, bookingPage.getPageable().previousOrFirst());
+            } else {
+                throw new NotFoundException("Бронирований нет");
+            }
+        }
+        List<Booking> bookings = getBookingListForOwnerByState(userId, state, pageable).getContent();
 
         log.info("Получен список бронирований вещей пользователя с id '{}' с параметром '{}' ", userId, state);
         return bookings.stream()
@@ -138,7 +146,21 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    private List<Booking> getBookingListByState(long userId, String state, Pageable pageable) {
+    private Page<Booking> getElementsFromPage(long userId, String state, int from, int size) {
+        Pageable pageable = PageRequest.of(from, size);
+
+        Page<Booking> bookingPage = getBookingListByState(userId, state, pageable);
+        while (bookingPage.isEmpty()) {
+            if (bookingPage.getPageable().hasPrevious()) {
+                bookingPage = getBookingListByState(userId, state, bookingPage.getPageable().previousOrFirst());
+            } else {
+                throw new NotFoundException("Бронирований нет");
+            }
+        }
+        return bookingPage;
+    }
+
+    private Page<Booking> getBookingListByState(long userId, String state, Pageable pageable) {
 
         switch (state) {
             case "ALL":
@@ -162,7 +184,7 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    private List<Booking> getBookingListForOwnerByState(long userId, String state, Pageable pageable) {
+    private Page<Booking> getBookingListForOwnerByState(long userId, String state, Pageable pageable) {
 
         switch (state) {
             case "ALL":

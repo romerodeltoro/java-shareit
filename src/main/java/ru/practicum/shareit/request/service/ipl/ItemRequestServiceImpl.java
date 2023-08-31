@@ -1,8 +1,9 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.service.ipl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ItemNotFoundException;
@@ -11,6 +12,10 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.mapper.ItemRequestMapper;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.service.ItemRequestService;
+import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
 
@@ -21,7 +26,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ItemRequestServiceImpl implements ItemRequestService{
+public class ItemRequestServiceImpl implements ItemRequestService {
 
     private final ItemRequestRepository itemRequestRepository;
 
@@ -71,19 +76,6 @@ public class ItemRequestServiceImpl implements ItemRequestService{
                 })
                 .collect(Collectors.toList());
 
-
-        /*List<ItemRequestDto> requests = itemRequestRepository.findAllItems(userId, pageable).stream()
-                .map(ItemRequestMapper.INSTANCE::toItemRequestDto)
-                .peek(itemRequestDto -> {
-                    List<Item> items = itemRepository.findAllByRequestId(itemRequestDto.getId());
-                    itemRequestDto.setItems(items.stream()
-                            .map(ItemMapper.INSTANCE::toItemDto).collect(Collectors.toList()));
-                })
-                .skip(from)
-                .collect(Collectors.toList());
-
-        Page<ItemRequestDto> itemRequests = new PageImpl<>(
-                requests, new PageRequest(from, size, Sort.by("created")), requests.size());*/
         log.info("Получен список запросов");
 
         return itemRequests;
@@ -96,7 +88,7 @@ public class ItemRequestServiceImpl implements ItemRequestService{
         ItemRequestDto itemRequestDto =
                 ItemRequestMapper.INSTANCE.toItemRequestDto(itemRequestRepository.findById(requestId)
                         .orElseThrow(() -> new ItemNotFoundException(
-                        String.format("Запроса с id %d нет в базе", requestId))));
+                                String.format("Запроса с id %d нет в базе", requestId))));
         List<Item> items = itemRepository.findAllByRequestId(itemRequestDto.getId());
         itemRequestDto.setItems(items.stream()
                 .map(ItemMapper.INSTANCE::toItemDto).collect(Collectors.toList()));

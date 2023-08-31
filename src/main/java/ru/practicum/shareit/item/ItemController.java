@@ -9,6 +9,8 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @Validated
@@ -45,15 +47,19 @@ public class ItemController {
 
     @GetMapping
     public ResponseEntity<List<ItemDto>> getAllUserItems(
-            @RequestHeader("X-Sharer-User-Id") long userId) {
-        return ResponseEntity.ok().body(itemService.getAllUserItems(userId));
+            @RequestHeader("X-Sharer-User-Id") long userId,
+            @RequestParam(value = "from", defaultValue = "0", required = false) @Min(0) Integer from,
+            @RequestParam(value = "size", defaultValue = "10", required = false) @Min(1) @Max(100) Integer size) {
+        return ResponseEntity.ok().body(itemService.getAllUserItems(userId, from, size));
     }
 
     @GetMapping("/search")
     public ResponseEntity<List<ItemDto>> searchItems(
             @RequestHeader("X-Sharer-User-Id") long userId,
-            @RequestParam("text") String searchText) {
-        return ResponseEntity.ok().body(itemService.searchItems(userId, searchText));
+            @RequestParam("text") String searchText,
+            @RequestParam(value = "from", defaultValue = "0", required = false) @Min(0) Integer from,
+            @RequestParam(value = "size", defaultValue = "10", required = false) @Min(1) @Max(100) Integer size) {
+        return ResponseEntity.ok().body(itemService.searchItems(userId, searchText, from, size));
     }
 
     @PostMapping("/{itemId}/comment")

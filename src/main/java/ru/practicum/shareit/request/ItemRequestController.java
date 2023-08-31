@@ -1,18 +1,16 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.service.ItemRequestService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.util.List;
-import java.util.Set;
 
 
 @Validated
@@ -48,7 +46,7 @@ public class ItemRequestController {
     @GetMapping("/{requestId}")
     public ResponseEntity<ItemRequestDto> getItemRequest(
             @RequestHeader("X-Sharer-User-Id") Long userId,
-            @PathVariable Long requestId){
+            @PathVariable Long requestId) {
         return ResponseEntity.ok().body(itemRequestService.getItemRequest(userId, requestId));
     }
 

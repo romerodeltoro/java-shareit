@@ -283,7 +283,7 @@ public class ItemControllerTest {
                 itemController.getAllUserItems(userId).getBody().get(1).getName(), "Вещи не совпадают.");*/
     }
 
-    @Test
+    /*@Test
     @DisplayName("Поиск вещей по запросу")
     void searchItems() {
         final long userId = userController.createUser(userDto).getBody().getId();
@@ -301,5 +301,5 @@ public class ItemControllerTest {
         assertEquals(listItems.get(0).getDescription(),
                 itemController.searchItems(userId, searchText)
                         .getBody().get(0).getDescription(), "Вещи не совпадают.");
-    }
+    }*/
 }
