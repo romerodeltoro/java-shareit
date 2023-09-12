@@ -40,10 +40,7 @@ class ItemRequestRepositoryTest {
         requestDto.setDescription("Хотел бы воспользоваться щёткой для обуви");
         request = itemRequestRepository.save(ItemRequestMapper.INSTANCE.toItemRequest(requestDto));
         request.setRequestor(user);
-        ItemRequestDto otherRequestDto = new ItemRequestDto();
-        otherRequestDto.setDescription("Что-нибудь эдакое");
-        otherRequest = itemRequestRepository.save(ItemRequestMapper.INSTANCE.toItemRequest(otherRequestDto));
-        otherRequest.setRequestor(otherUser);
+
     }
 
     @Test
@@ -59,9 +56,9 @@ class ItemRequestRepositoryTest {
     @DisplayName("Получение списка запросов кроме пользователя")
     void findAllItems() {
         List<ItemRequest> requests = itemRequestRepository
-                .findAllItems(user.getId(), Pageable.ofSize(2));
+                .findAllItems(otherUser.getId(), Pageable.ofSize(2));
 
         assertEquals(1, requests.size());
-        assertEquals(otherRequest, requests.get(0));
+        assertEquals(request, requests.get(0));
     }
 }
