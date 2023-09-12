@@ -9,8 +9,6 @@ import ru.practicum.shareit.booking.dto.LastBookingDto;
 import ru.practicum.shareit.booking.dto.NextBookingDto;
 import ru.practicum.shareit.booking.model.Booking;
 
-import java.util.List;
-
 @Mapper
 public interface BookingMapper {
 

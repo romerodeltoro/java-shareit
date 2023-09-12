@@ -59,23 +59,6 @@ public class BookingServiceImpl implements BookingService {
         return BookingMapper.INSTANCE.toBookingReplyDto(booking);
     }
 
-    /*@Override
-    @Transactional
-    public BookingDto updateBooking(long userId, BookingDto bookingDto) {
-        User user = ifUserExistReturnUser(userId);
-        Item item = itemRepository.findById(bookingDto.getItemId())
-                .orElseThrow(() -> new ItemNotFoundException(
-                String.format("Вещи с id %d нет в базе", bookingDto.getItemId())));
-        Booking booking = bookingRepository.save(BookingMapper.INSTANCE.toBooking(bookingDto));
-        booking.setItem(item);
-        booking.setBooker(user);
-        booking.setStatus("WAITING");
-        item.setAvailable(false);
-
-        log.info("Бронь '{}' обновлена", booking);
-        return BookingMapper.INSTANCE.toBookingReplyDto(booking);
-    }*/
-
     @Override
     @Transactional
     public BookingDto approvingBooking(long userId, long bookingId, boolean approved) {
