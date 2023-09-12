@@ -1,8 +1,8 @@
 package ru.practicum.shareit.request.service.ipl;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -57,7 +57,7 @@ class ItemRequestServiceImplTest {
 
     @Test
     @DisplayName("Создание запроса на аренду")
-     void createItemRequest_whenUserExists_thenItemRequestCreated() {
+    void createItemRequest_whenUserExists_thenItemRequestCreated() {
         ItemRequest request = ItemRequestMapper.INSTANCE.toItemRequest(requestDto);
         request.setRequestor(requestor);
         when(userRepository.findById(requestor.getId())).thenReturn(Optional.of(requestor));

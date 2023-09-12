@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.exception.UserEmailAlreadyExistException;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -146,11 +147,11 @@ public class UserServiceImplIntegrationTest {
 
         assertThat(actualUsers, hasSize(sourceUsers.size()));
         for (UserDto sourceUser : sourceUsers) {
-            assertThat(actualUsers, hasItem( allOf(
+            assertThat(actualUsers, hasItem(allOf(
                     hasProperty("id", notNullValue()),
                     hasProperty("name", equalTo(sourceUser.getName())),
                     hasProperty("email", equalTo(sourceUser.getEmail()))
             )));
-    }
+        }
     }
 }

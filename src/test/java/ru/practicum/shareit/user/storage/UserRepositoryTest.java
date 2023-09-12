@@ -8,7 +8,8 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 class UserRepositoryTest {
@@ -22,7 +23,7 @@ class UserRepositoryTest {
         User user = new User(1L, "User", "user@user.com");
         userRepository.save(user);
 
-        Optional<User> actualUser =  userRepository.findByEmail(user.getEmail());
+        Optional<User> actualUser = userRepository.findByEmail(user.getEmail());
 
         assertTrue(actualUser.isPresent());
         assertEquals("user@user.com", actualUser.get().getEmail());

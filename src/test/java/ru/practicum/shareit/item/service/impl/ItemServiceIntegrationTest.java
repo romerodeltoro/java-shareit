@@ -12,7 +12,10 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.storage.BookingRepository;
-import ru.practicum.shareit.exception.*;
+import ru.practicum.shareit.exception.ItemBookerException;
+import ru.practicum.shareit.exception.ItemNotFoundException;
+import ru.practicum.shareit.exception.ItemOwnerException;
+import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemOwnerDto;
@@ -269,8 +272,8 @@ class ItemServiceIntegrationTest {
                 actualItem.getDescription(), "Описания не совпадают.");
         assertEquals(itemDto.getAvailable(),
                 actualItem.getAvailable(), "Доступности не совпадают.");
-        assertEquals(comments.size(),actualItem.getComments().size());
-        assertEquals(comments.get(0).getText(),actualItem.getComments().get(0).getText());
+        assertEquals(comments.size(), actualItem.getComments().size());
+        assertEquals(comments.get(0).getText(), actualItem.getComments().get(0).getText());
         assertEquals(lastBooking.getId(), actualItem.getLastBooking().getId());
         assertEquals(nextBooking.getId(), actualItem.getNextBooking().getId());
 
@@ -322,7 +325,7 @@ class ItemServiceIntegrationTest {
 
         List<ItemDto> itemsDto = itemService.searchItems(userId, searchText, from, size);
 
-       assertThat(itemsDto.toString(), isEmpty());
+        assertThat(itemsDto.toString(), isEmpty());
     }
 
     @Test

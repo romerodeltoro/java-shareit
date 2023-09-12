@@ -257,7 +257,7 @@ class BookingServiceIntegrationTest {
         booking.setItem(item);
 
         assertThrows(UserNotFoundException.class,
-                () -> bookingService.getBooking(1L,booking.getId()));
+                () -> bookingService.getBooking(1L, booking.getId()));
     }
 
     @Test

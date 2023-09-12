@@ -322,7 +322,7 @@ class BookingServiceImplTest {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class,
-                () -> bookingService.getBooking(item.getUser().getId(),booking.getId()));
+                () -> bookingService.getBooking(item.getUser().getId(), booking.getId()));
     }
 
     @Test
