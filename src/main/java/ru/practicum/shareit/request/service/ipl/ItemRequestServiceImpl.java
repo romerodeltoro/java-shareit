@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 public class ItemRequestServiceImpl implements ItemRequestService {
 
     private final ItemRequestRepository itemRequestRepository;
-
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
@@ -64,7 +63,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> getAllItems(long userId, Integer from, Integer size) {
         ifUserExistReturnUser(userId);
-        Pageable pageable = PageRequest.of(from, size);
+        Pageable pageable = PageRequest.of(from / size, size);
         List<ItemRequest> requests = itemRequestRepository.findAllItems(userId, pageable);
 
         List<ItemRequestDto> itemRequests = requests.stream()

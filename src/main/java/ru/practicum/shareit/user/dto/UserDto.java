@@ -20,6 +20,5 @@ public class UserDto {
 
     @NotBlank(message = "Электронная почта не может быть пустой")
     @Email(message = "Электронная почта должна содержать символ @")
-
     private String email;
 }

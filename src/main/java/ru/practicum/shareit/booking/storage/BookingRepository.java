@@ -103,5 +103,5 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "ORDER by b.start asc")
     List<Booking> findFirstByItemIdAndStartDateAfter(long itemId);
 
-    List<Booking> findAllByItemIdAndBookerId(long itemId, long bookerI);
+    List<Booking> findAllByItemIdAndBookerId(long itemId, long bookerId);
 }

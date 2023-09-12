@@ -37,18 +37,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
-
     private final ItemRepository itemRepository;
-
-
     private final UserRepository userRepository;
-
-
     private final BookingRepository bookingRepository;
-
-
     private final CommentRepository commentRepository;
-
 
     @Transactional
     @Override
@@ -172,7 +164,7 @@ public class ItemServiceImpl implements ItemService {
     private void itemOwnerCheck(long userId, long itemId) {
         if (itemId != userId) {
             throw new ItemOwnerException(
-                    String.format("Вещь с id %d не принадлежит пользователю с id %d", itemId, userId));
+                    String.format("Вещь не принадлежит пользователю с id %d", userId));
         }
     }
 

@@ -15,7 +15,6 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.booking.storage.BookingRepository;
 import ru.practicum.shareit.exception.*;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.item.storage.ItemRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.storage.UserRepository;
@@ -29,24 +28,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-
     private final BookingRepository bookingRepository;
-
 
     private final ItemRepository itemRepository;
 
-
     private final UserRepository userRepository;
-
-
-    private final ItemService itemService;
 
 
     @Override
     @Transactional
     public BookingDto createBooking(long userId, BookingDto bookingDto) {
         User user = ifUserExistReturnUser(userId);
-        Item item = itemService.ifItemExistReturnItem(bookingDto.getItemId());
+        Item item = itemRepository.findById(bookingDto.getItemId())
+                .orElseThrow(() -> new ItemNotFoundException(
+                        String.format("Вещи с id %d нет в базе", bookingDto.getItemId())));
         if (!item.getAvailable()) {
             throw new ItemNotAvailableException(String.format("Вещь %s не доступна для бронирования", item));
         }
@@ -60,15 +55,17 @@ public class BookingServiceImpl implements BookingService {
         booking.setBooker(user);
         booking.setStatus("WAITING");
 
-        log.info("Пользователь '{}' создал запрос на бронь вещи - '{}'", user, item);
+        log.info("Пользователь '{}' создал запрос на бронь вещь - '{}'", user, item);
         return BookingMapper.INSTANCE.toBookingReplyDto(booking);
     }
 
-    @Override
+    /*@Override
     @Transactional
     public BookingDto updateBooking(long userId, BookingDto bookingDto) {
         User user = ifUserExistReturnUser(userId);
-        Item item = itemService.ifItemExistReturnItem(bookingDto.getItemId());
+        Item item = itemRepository.findById(bookingDto.getItemId())
+                .orElseThrow(() -> new ItemNotFoundException(
+                String.format("Вещи с id %d нет в базе", bookingDto.getItemId())));
         Booking booking = bookingRepository.save(BookingMapper.INSTANCE.toBooking(bookingDto));
         booking.setItem(item);
         booking.setBooker(user);
@@ -77,13 +74,15 @@ public class BookingServiceImpl implements BookingService {
 
         log.info("Бронь '{}' обновлена", booking);
         return BookingMapper.INSTANCE.toBookingReplyDto(booking);
-    }
+    }*/
 
     @Override
     @Transactional
     public BookingDto approvingBooking(long userId, long bookingId, boolean approved) {
         Booking booking = ifBookingExistReturnBooking(bookingId);
-        Item item = itemService.ifItemExistReturnItem(booking.getItem().getId());
+        Item item = itemRepository.findById(booking.getItem().getId())
+                .orElseThrow(() -> new ItemNotFoundException(
+                        String.format("Вещи с id %d нет в базе", (booking.getItem().getId()))));
         ifUserExistReturnUser(userId);
 
         if (userId != item.getUser().getId()) {
@@ -128,7 +127,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingDto> getAllBookingByOwner(long userId, String state, int from, int size) {
         ifUserExistReturnUser(userId);
-        Pageable pageable = PageRequest.of(from, size);
+        Pageable pageable = PageRequest.of(from / size, size);
         Page<Booking> bookingPage = getBookingListForOwnerByState(userId, state, pageable);
         while (bookingPage.isEmpty()) {
             if (bookingPage.getPageable().hasPrevious()) {
@@ -147,7 +146,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private Page<Booking> getElementsFromPage(long userId, String state, int from, int size) {
-        Pageable pageable = PageRequest.of(from, size);
+        Pageable pageable = PageRequest.of(from / size, size);
 
         Page<Booking> bookingPage = getBookingListByState(userId, state, pageable);
         while (bookingPage.isEmpty()) {

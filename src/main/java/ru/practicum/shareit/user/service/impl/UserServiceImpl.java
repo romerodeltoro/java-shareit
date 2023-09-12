@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDto updateUser(long userId, UserDto userDto) {
+    public UserDto updateUser(Long userId, UserDto userDto) {
         User user = ifUserExistReturnUser(userId);
         isEmailExist(userId, userDto.getEmail());
         user.setName(userDto.getName() != null ? userDto.getName() : user.getName());
@@ -45,7 +45,6 @@ public class UserServiceImpl implements UserService {
         return UserMapper.INSTANCE.toUserDto(user);
     }
 
-    //@Transactional(readOnly = true)
     @Override
     public UserDto getUser(long userId) {
         User user = ifUserExistReturnUser(userId);

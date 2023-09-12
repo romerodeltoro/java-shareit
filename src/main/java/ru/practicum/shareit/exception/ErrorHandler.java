@@ -43,13 +43,13 @@ public class ErrorHandler {
                 .body(new ResponseError(e.getMessage()));
     }
 
-    @ExceptionHandler(ItemNotAvailableException.class)
+    /*@ExceptionHandler(ItemNotAvailableException.class)
     public ResponseEntity<ResponseError> itemNotAvailableException(ItemNotAvailableException e) {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseError(e.getMessage()));
-    }
+    }*/
 
     @ExceptionHandler(UserEmailAlreadyExistException.class)
     public ResponseEntity<ResponseError> userEmailAlreadyExistException(UserEmailAlreadyExistException e) {
@@ -67,29 +67,29 @@ public class ErrorHandler {
                 .body(new ResponseError(e.getMessage()));
     }
 
-    @ExceptionHandler(ItemOwnerException.class)
+  /*  @ExceptionHandler(ItemOwnerException.class)
     public ResponseEntity<ResponseError> itemOwnerException(ItemOwnerException e) {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new ResponseError(e.getMessage()));
-    }
+    }*/
 
-    @ExceptionHandler(BookingEndDateValidationException.class)
+   /* @ExceptionHandler(BookingEndDateValidationException.class)
     public ResponseEntity<ResponseError> bookingEndDateValidationException(BookingEndDateValidationException e) {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseError(e.getMessage()));
-    }
+    }*/
 
-    @ExceptionHandler(BookingNotFoundException.class)
+  /*  @ExceptionHandler(BookingNotFoundException.class)
     public ResponseEntity<ResponseError> bookingNotFoundException(BookingNotFoundException e) {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ResponseError(e.getMessage()));
-    }
+    }*/
 
     @ExceptionHandler(UnknownStateException.class)
     public ResponseEntity<ResponseError> unknownStateException(UnknownStateException e) {
@@ -99,20 +99,20 @@ public class ErrorHandler {
                 .body(new ResponseError(e.getMessage()));
     }
 
-    @ExceptionHandler(NotFoundException.class)
+   /* @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ResponseError> notFoundException(NotFoundException e) {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ResponseError(e.getMessage()));
-    }
+    }*/
 
-    @ExceptionHandler(ItemBookerException.class)
+ /*   @ExceptionHandler(ItemBookerException.class)
     public ResponseEntity<ResponseError> itemBookerException(ItemBookerException e) {
         log.error(e.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseError(e.getMessage()));
-    }
+    }*/
 
 }

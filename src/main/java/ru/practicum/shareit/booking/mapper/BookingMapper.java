@@ -16,13 +16,9 @@ public interface BookingMapper {
 
     BookingMapper INSTANCE = Mappers.getMapper(BookingMapper.class);
 
-    BookingDto toBookingDto(Booking booking);
-
     Booking toBooking(BookingDto bookingDto);
 
     BookingReplyDto toBookingReplyDto(Booking booking);
-
-    List<BookingReplyDto> toBookingReplyDtoList(Iterable<Booking> bookings);
 
     @Mapping(target = "bookerId", source = "booking.booker.id")
     LastBookingDto lastBookingDto(Booking booking);

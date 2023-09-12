@@ -6,13 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> {
 
     @Query("select r " +
             "from ItemRequest r " +
-            //"left join Item i on r.id = i.requestId " +
             "where r.requestor.id = ?1 " +
             "ORDER BY r.id ASC")
     List<ItemRequest> getAllByRequestorId(long requestorId);
@@ -22,8 +20,5 @@ public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> 
             "where r.requestor.id != ?1 " +
             "ORDER BY r.created DESC")
     List<ItemRequest> findAllItems(long requestorId, Pageable pageable);
-
-
-    Optional<ItemRequest> findById(Long id);
 
 }

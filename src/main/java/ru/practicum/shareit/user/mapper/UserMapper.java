@@ -19,5 +19,5 @@ public interface UserMapper {
 
     List<UserDto> toUserDtoList(Iterable<User> users);
 
-    UserBookingDto toUserBookingDto(User user);
+//    UserBookingDto toUserBookingDto(User user);
 }
