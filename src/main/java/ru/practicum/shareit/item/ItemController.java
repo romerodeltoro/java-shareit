@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
@@ -36,8 +37,10 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<ItemDto> getItem(@PathVariable long itemId) {
-        return ResponseEntity.ok().body(itemService.getItem(itemId));
+    public ResponseEntity<ItemDto> getItem(
+            @RequestHeader("X-Sharer-User-Id") long userId,
+            @PathVariable long itemId) {
+        return ResponseEntity.ok().body(itemService.getItem(itemId, userId));
     }
 
     @GetMapping
@@ -47,7 +50,17 @@ public class ItemController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ItemDto>> searchItems(@RequestParam("text") String text) {
-        return ResponseEntity.ok().body(itemService.searchItems(text));
+    public ResponseEntity<List<ItemDto>> searchItems(
+            @RequestHeader("X-Sharer-User-Id") long userId,
+            @RequestParam("text") String searchText) {
+        return ResponseEntity.ok().body(itemService.searchItems(userId, searchText));
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public ResponseEntity<CommentDto> postComment(
+            @RequestHeader("X-Sharer-User-Id") long userId,
+            @PathVariable long itemId,
+            @Valid @RequestBody CommentDto commentDto) {
+        return ResponseEntity.ok().body(itemService.postComment(userId, itemId, commentDto));
     }
 }
