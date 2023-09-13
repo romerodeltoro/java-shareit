@@ -25,6 +25,9 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.storage.CommentRepository;
 import ru.practicum.shareit.item.storage.ItemRepository;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.mapper.ItemRequestMapper;
+import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -51,12 +54,14 @@ class ItemServiceIntegrationTest {
     private final UserRepository userRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository requestRepository;
 
     private ItemDto itemDto;
     private ItemDto otherItemDto;
     private UserDto userDto;
     private UserDto otherUserDto;
     private CommentDto commentDto;
+    private ItemRequestDto requestDto;
 
     @BeforeEach
     void setUp() {
@@ -81,12 +86,31 @@ class ItemServiceIntegrationTest {
         commentDto = new CommentDto();
         commentDto.setText("Comment");
         commentDto.setAuthorName("otherUser");
+
+        requestDto = new ItemRequestDto();
+        requestDto.setDescription("Хотел бы воспользоваться щёткой для обуви");
     }
 
     @Test
     @DisplayName("Создание вещи")
     void createItem_thenItemIsCreated() {
         long userId = userRepository.save(UserMapper.INSTANCE.toUser(userDto)).getId();
+
+        ItemDto actualItem = itemService.createItem(userId, itemDto);
+
+        assertEquals(itemDto.getName(),
+                actualItem.getName(), "Имена не совпадают.");
+        assertEquals(itemDto.getDescription(),
+                actualItem.getDescription(), "Email не совпадают.");
+
+    }
+
+    @Test
+    @DisplayName("Создание вещи на запрос")
+    void createItem_whenRequest_thenItemIsCreated() {
+        long userId = userRepository.save(UserMapper.INSTANCE.toUser(userDto)).getId();
+        long requestId = requestRepository.save(ItemRequestMapper.INSTANCE.toItemRequest(requestDto)).getId();
+        itemDto.setRequestId(requestId);
 
         ItemDto actualItem = itemService.createItem(userId, itemDto);
 

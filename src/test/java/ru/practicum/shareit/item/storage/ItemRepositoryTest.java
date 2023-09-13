@@ -50,7 +50,7 @@ class ItemRepositoryTest {
         itemDto2.setAvailable(true);
         item2 = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto2));
         item2.setUser(user);
-        item2.setRequestId(request.getId());
+        item2.setRequest(request);
     }
 
     @Test

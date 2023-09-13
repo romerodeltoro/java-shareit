@@ -49,7 +49,8 @@ class ItemRequestServiceImplTest {
     void setUp() {
         requestor = new User(1L, "Requestor", "requestor@user.com");
         user = new User(2L, "User", "user@user.com");
-        item = new Item(1L, "Щетка", "Для обуви", true, user, 1L);
+        item = new Item(1L, "Щетка", "Для обуви", true, user,
+                ItemRequestMapper.INSTANCE.toItemRequest(requestDto));
 
         requestDto = new ItemRequestDto();
         requestDto.setDescription("Хотел бы воспользоваться щёткой для обуви");

@@ -88,7 +88,7 @@ class ItemRequestServiceIntegrationTest {
         ItemRequest request = requestRepository.save(ItemRequestMapper.INSTANCE.toItemRequest(requestDto));
         request.setRequestor(requestor);
         Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto));
-        item.setRequestId(request.getId());
+        item.setRequest(request);
         List<ItemRequest> requests = List.of(request);
 
         List<ItemRequestDto> actualList = requestService.getAllUserItemsRequests(requestor.getId());
@@ -115,7 +115,7 @@ class ItemRequestServiceIntegrationTest {
         ItemRequest request = requestRepository.save(ItemRequestMapper.INSTANCE.toItemRequest(requestDto));
         request.setRequestor(requestor);
         Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto));
-        item.setRequestId(request.getId());
+        item.setRequest(request);
         List<ItemRequest> requests = List.of(request);
 
         List<ItemRequestDto> actualList = requestService.getAllItems(user.getId(), from, size);
@@ -141,7 +141,7 @@ class ItemRequestServiceIntegrationTest {
         ItemRequest request = requestRepository.save(ItemRequestMapper.INSTANCE.toItemRequest(requestDto));
         request.setRequestor(requestor);
         Item item = itemRepository.save(ItemMapper.INSTANCE.toItem(itemDto));
-        item.setRequestId(request.getId());
+        item.setRequest(request);
 
         ItemRequestDto actualRequestDto = requestService
                 .getItemRequest(requestor.getId(), request.getId());
