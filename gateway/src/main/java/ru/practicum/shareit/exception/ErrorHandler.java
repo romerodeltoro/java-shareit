@@ -34,4 +34,36 @@ public class ErrorHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(violations);
     }
+
+    @ExceptionHandler(ItemNotFoundException.class)
+    public ResponseEntity<ResponseError> itemAlreadyExistException(ItemNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ResponseError(e.getMessage()));
+    }
+
+    @ExceptionHandler(UserEmailAlreadyExistException.class)
+    public ResponseEntity<ResponseError> userEmailAlreadyExistException(UserEmailAlreadyExistException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ResponseError(e.getMessage()));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ResponseError> userNotFoundException(UserNotFoundException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ResponseError(e.getMessage()));
+    }
+
+    @ExceptionHandler(UnknownStateException.class)
+    public ResponseEntity<ResponseError> unknownStateException(UnknownStateException e) {
+        log.error(e.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ResponseError(e.getMessage()));
+    }
 }

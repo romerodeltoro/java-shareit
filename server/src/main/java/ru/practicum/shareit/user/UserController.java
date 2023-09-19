@@ -24,12 +24,12 @@ public class UserController {
         return ResponseEntity.ok().body(userService.createUser(userDto));
     }
 
-/*    @PatchMapping("/{userId}")
+   @PatchMapping("/{userId}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
         return ResponseEntity.ok().body(userService.updateUser(userId, userDto));
     }
 
-    @GetMapping("/{userId}")
+   @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable long userId) {
         return ResponseEntity.ok().body(userService.getUser(userId));
     }
@@ -43,5 +43,5 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok().body(userService.getAllUsers());
-    }*/
+    }
 }
