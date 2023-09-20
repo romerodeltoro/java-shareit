@@ -10,8 +10,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.user.dto.UserDTO;
 
-import java.util.List;
-
 @Service
 public class UserClient extends BaseClient {
 
@@ -34,6 +32,7 @@ public class UserClient extends BaseClient {
     public <T> ResponseEntity<Object> updateUser(long userId, UserDTO userDTO) {
         return patch("/" + userId, userDTO);
     }
+
     public ResponseEntity<Object> getUser(long userId) { return get("/" + userId); }
 
     public ResponseEntity<Object> getAllUsers() { return get(""); }

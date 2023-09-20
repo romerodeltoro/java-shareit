@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDTO;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Validated
 @RestController
