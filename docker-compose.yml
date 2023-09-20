@@ -7,22 +7,31 @@ services:
     ports:
       - "8080:8080"
     depends_on:
+      - server
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
 
   server:
-    build:
-    image:
-    container_name:
+    build: server
+    image: server-image
+    container_name: server-container
     ports:
       - "9090:9090"
     depends_on:
+      - db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/shareit
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - TZ=Europe/Moscow
 
   db:
-    image:
-    container_name:
+    image: postgres:13.7-alpine
+    container_name: db-container
     ports:
       - "6541:5432"
     environment:
+      - POSTGRES_DB=shareit
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - TZ=Europe/Moscow

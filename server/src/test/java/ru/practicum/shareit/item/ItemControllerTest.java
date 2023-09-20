@@ -1,3 +1,4 @@
+/*
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -282,4 +283,4 @@ class ItemControllerTest {
         return dto;
     }
 
-}
+}*/

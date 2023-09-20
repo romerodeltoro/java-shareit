@@ -28,6 +28,6 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
-    @Column(name = "created", nullable = false)
+    @Column(name = "created", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime created;
 }
