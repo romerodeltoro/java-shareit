@@ -2,18 +2,13 @@ package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.util.List;
 
 
-@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/requests")
@@ -24,7 +19,7 @@ public class ItemRequestController {
     @PostMapping
     public ResponseEntity<ItemRequestDto> createItem(
             @RequestHeader("X-Sharer-User-Id") Long userId,
-            @Valid @RequestBody ItemRequestDto itemRequestDto) {
+            @RequestBody ItemRequestDto itemRequestDto) {
         return ResponseEntity.ok().body(itemRequestService.createItemRequest(userId, itemRequestDto));
 
     }
@@ -38,8 +33,8 @@ public class ItemRequestController {
     @GetMapping("/all")
     public ResponseEntity<List<ItemRequestDto>> getAllItems(
             @RequestHeader("X-Sharer-User-Id") Long userId,
-            @RequestParam(value = "from", defaultValue = "0", required = false) @Min(0) Integer from,
-            @RequestParam(value = "size", defaultValue = "10", required = false) @Min(1) @Max(100) Integer size) {
+            @RequestParam(value = "from", defaultValue = "0", required = false) Integer from,
+            @RequestParam(value = "size", defaultValue = "10", required = false) Integer size) {
         return ResponseEntity.ok().body(itemRequestService.getAllItems(userId, from, size));
     }
 
