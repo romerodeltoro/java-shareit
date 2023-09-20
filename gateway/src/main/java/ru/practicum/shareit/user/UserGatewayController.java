@@ -21,7 +21,7 @@ public class UserGatewayController {
         return userClient.createUser(userDto);
     }
 
-   @PatchMapping("/{userId}")
+    @PatchMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable Long userId, @RequestBody UserDTO userDto) {
         return userClient.updateUser(userId, userDto);
     }
@@ -37,7 +37,7 @@ public class UserGatewayController {
         return ResponseEntity.noContent().build();
     }
 
-   @GetMapping
+    @GetMapping
     public ResponseEntity<Object> getAllUsers() {
         return userClient.getAllUsers();
     }
