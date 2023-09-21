@@ -2,12 +2,10 @@ package ru.practicum.shareit.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 
@@ -24,12 +22,12 @@ public class UserController {
         return ResponseEntity.ok().body(userService.createUser(userDto));
     }
 
-   @PatchMapping("/{userId}")
+    @PatchMapping("/{userId}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
         return ResponseEntity.ok().body(userService.updateUser(userId, userDto));
     }
 
-   @GetMapping("/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getUser(@PathVariable long userId) {
         return ResponseEntity.ok().body(userService.getUser(userId));
     }
