@@ -75,8 +75,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "from Booking as b " +
             "join b.item as i " +
             "where i.user.id = ?1 " +
-            "AND b.start <= CURRENT_TIMESTAMP " +
-            "AND b.end >= CURRENT_TIMESTAMP " +
+            "AND b.start <= now() " +
+            "AND b.end >= now() " +
             "order by b.start desc")
     Page<Booking> findAllByOwnerIdAndDateBeforeAndDateAfter(long ownerId, Pageable pageable);
 
