@@ -1,4 +1,3 @@
-/*
 package ru.practicum.shareit.item;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,7 +17,6 @@ import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.validation.ValidationException;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -74,62 +72,6 @@ class ItemControllerTest {
         verify(itemService).createItem(anyLong(), any());
     }
 
-    @SneakyThrows
-    @Test
-    @DisplayName("Создание вещи пользователем с некорректным именем")
-    void createItem_whenItemNameIsInvalid_thenItemNotCreated() {
-        long userId = 1L;
-        ItemDto itemDto = new ItemDto();
-        itemDto.setDescription("Простая дрель");
-        itemDto.setAvailable(true);
-        when(itemService.createItem(userId, itemDto)).thenThrow(ValidationException.class);
-
-        mockMvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", userId)
-                        .content(objectMapper.writeValueAsString(itemDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(itemService, never()).createItem(userId, itemDto);
-    }
-
-    @SneakyThrows
-    @Test
-    @DisplayName("Создание вещи пользователем с некорректным описанием")
-    void createItem_whenItemDescriptionIsInvalid_thenItemNotCreated() {
-        long userId = 1L;
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("Дрель");
-        itemDto.setAvailable(true);
-        when(itemService.createItem(userId, itemDto)).thenThrow(ValidationException.class);
-
-        mockMvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", userId)
-                        .content(objectMapper.writeValueAsString(itemDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(itemService, never()).createItem(userId, itemDto);
-    }
-
-    @SneakyThrows
-    @Test
-    @DisplayName("Создание вещи пользователем с некорректной доступностью")
-    void createItem_whenItemAvailableIsInvalid_thenItemNotCreated() {
-        long userId = 1L;
-        ItemDto itemDto = new ItemDto();
-        itemDto.setName("Дрель");
-        itemDto.setDescription("Простая дрель");
-        when(itemService.createItem(userId, itemDto)).thenThrow(ValidationException.class);
-
-        mockMvc.perform(post("/items")
-                        .header("X-Sharer-User-Id", userId)
-                        .content(objectMapper.writeValueAsString(itemDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(itemService, never()).createItem(userId, itemDto);
-    }
 
     @SneakyThrows
     @Test
@@ -283,4 +225,4 @@ class ItemControllerTest {
         return dto;
     }
 
-}*/
+}

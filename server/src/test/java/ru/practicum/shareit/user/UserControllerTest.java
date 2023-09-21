@@ -1,4 +1,3 @@
-/*
 package ru.practicum.shareit.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +15,6 @@ import ru.practicum.shareit.exception.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
-import javax.validation.ValidationException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -66,56 +63,6 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(userDto.getId()), Long.class))
                 .andExpect(jsonPath("$.name", is(userDto.getName())))
                 .andExpect(jsonPath("$.email", is(userDto.getEmail())));
-    }
-
-    @SneakyThrows
-    @Test
-    @DisplayName("Создание пользователя с пустым полем name")
-    public void createUser_whenUserWithBlankName_thenReturnedBadRequest() {
-        final UserDto userDtoWithBlankName = new UserDto();
-        userDtoWithBlankName.setEmail("user@user.com");
-        when(userService.createUser(userDtoWithBlankName)).thenThrow(ValidationException.class);
-
-        mockMvc.perform(post("/users")
-                        .content(objectMapper.writeValueAsString(userDtoWithBlankName))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding(StandardCharsets.UTF_8))
-                .andExpect(status().isBadRequest());
-
-        verify(userService, never()).createUser(userDtoWithBlankName);
-    }
-
-    @SneakyThrows
-    @Test
-    @DisplayName("Создание пользователя с пустым полем email")
-    public void createUser_whenUserWithBlankEmail_thenReturnedBadRequest() {
-        final UserDto userDtoWithBlankEmail = new UserDto();
-        userDtoWithBlankEmail.setEmail("User");
-        when(userService.createUser(userDtoWithBlankEmail)).thenThrow(ValidationException.class);
-
-        mockMvc.perform(post("/users")
-                        .content(objectMapper.writeValueAsString(userDtoWithBlankEmail))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(userService, never()).createUser(userDtoWithBlankEmail);
-    }
-
-    @SneakyThrows
-    @Test
-    @DisplayName("Создание пользователя с не корректным email")
-    public void createUser_whenUserWithWrongEmail_thenReturnedBadRequest() {
-        final UserDto userWithWrongEmail = new UserDto();
-        userWithWrongEmail.setName("User");
-        userWithWrongEmail.setEmail("user.com");
-        when(userService.createUser(userWithWrongEmail)).thenThrow(ValidationException.class);
-
-        mockMvc.perform(post("/users")
-                        .content(objectMapper.writeValueAsString(userWithWrongEmail))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(userService, never()).createUser(userWithWrongEmail);
     }
 
     @SneakyThrows
@@ -247,4 +194,3 @@ class UserControllerTest {
     }
 
 }
-*/

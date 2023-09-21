@@ -1,4 +1,3 @@
-/*
 package ru.practicum.shareit.request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,7 +19,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -60,21 +60,6 @@ class ItemRequestControllerTest {
         verify(requestService).createItemRequest(anyLong(), any());
     }
 
-    @SneakyThrows
-    @Test
-    @DisplayName("Создание запроса на аренду")
-    public void createItemRequest_whenItemRequestDtoNotValid_thenItemRequestCreated() {
-        long userId = 1L;
-        requestDto.setDescription("");
-
-        mockMvc.perform(post("/requests")
-                        .header("X-Sharer-User-Id", userId)
-                        .content(objectMapper.writeValueAsString(requestDto))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(requestService, never()).createItemRequest(userId, requestDto);
-    }
 
     @SneakyThrows
     @Test
@@ -133,62 +118,6 @@ class ItemRequestControllerTest {
         verify(requestService).getAllItems(userId, from, size);
     }
 
-    @SneakyThrows
-    @Test
-    @DisplayName("Получение списка запросов с некорректным параметром from")
-    void getAllItems_whenParamFromInvalid_thenItemRequestsReturned() {
-        int from = -1;
-        int size = 10;
-        long userId = 1L;
-        when(requestService.getAllItems(userId, from, size)).thenReturn(List.of(requestDto));
-
-        mockMvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", userId)
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(requestService, never()).getAllItems(userId, from, size);
-    }
-
-    @SneakyThrows
-    @Test
-    @DisplayName("Получение списка запросов с некорректным параметром size")
-    void getAllItems_whenParamSizeMinInvalid_thenItemRequestsReturned() {
-        int from = 0;
-        int size = 0;
-        long userId = 1L;
-        when(requestService.getAllItems(userId, from, size)).thenReturn(List.of(requestDto));
-
-        mockMvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", userId)
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(requestService, never()).getAllItems(userId, from, size);
-    }
-
-    @SneakyThrows
-    @Test
-    @DisplayName("Получение списка запросов с некорректным параметром size")
-    void getAllItems_whenParamSizeMaxInvalid_thenItemRequestsReturned() {
-        int from = 0;
-        int size = 999;
-        long userId = 1L;
-        when(requestService.getAllItems(userId, from, size)).thenReturn(List.of(requestDto));
-
-        mockMvc.perform(get("/requests/all")
-                        .header("X-Sharer-User-Id", userId)
-                        .param("from", String.valueOf(from))
-                        .param("size", String.valueOf(size))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
-
-        verify(requestService, never()).getAllItems(userId, from, size);
-    }
 
     @SneakyThrows
     @Test
@@ -206,4 +135,4 @@ class ItemRequestControllerTest {
 
         verify(requestService).getItemRequest(userId, requestId);
     }
-}*/
+}
