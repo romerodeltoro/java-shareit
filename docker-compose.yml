@@ -16,6 +16,7 @@ services:
     build: server
     image: server-image
     container_name: server-container
+    restart: on-failure
     ports:
       - "9090:9090"
     depends_on:
@@ -34,3 +35,5 @@ services:
       - POSTGRES_DB=shareit
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
+    volumes:
+      - ./data:/data/db
